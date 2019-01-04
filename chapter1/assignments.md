@@ -5,6 +5,7 @@
 after that execute `java -version` in terminal to verify your installation.
 Copy the output results like below to a text file `java-version.txt` so that I know you really did it
 ```
+Nathanael@NY83427 C:\Users\Nathanael
 $ java -version
 java version "1.8.0_192"
 Java(TM) SE Runtime Environment (build 1.8.0_192-b12)
@@ -23,8 +24,8 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.192-b12, mixed mode)
   + Download and checkout these [Java Demos and Samples](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
 ### Optional
-* Write a script or find a solution to automate the installation process so that
-development environment setup will be much easier. Provide me the link of your script or solution(gist is recommended)
+* Write a script or find a solution to automate the installation process so that development environment
+setup will be much easier. Provide me the link of your script or solution(gist is recommended)
 
 * Install jdk8 and IDEA Community in a different operation system, write a `HelloWorld.java` in IDEA and run it.
 Save a screen shot with filename `different-os.jpg` or `different-os.png`
@@ -46,15 +47,16 @@ take your program to finish? Can you optimize so that we won't wait in pains?
 * You submission should look like this:
 ```java
 public class Fibonacci {
-    
-    int calc(int n) {
-        // Write your stuff here
-        return xxx;
+    private int calc(int n) {
+        // You stuff here
+        return n;
     }
-    
+
     public static void main(String[] args) {
         Fibonacci fib = new Fibonacci();
+        System.out.println(fib.calc(3));
         System.out.println(fib.calc(20));
+        System.out.println(fib.calc(100));
     }
 }
 ```
