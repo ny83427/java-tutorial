@@ -1,4 +1,4 @@
-## Assignment of Chapter 1
+## Assignments of Chapter 1
 
 ### Required
 * Download and install [jdk-8u192](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) x64,
@@ -44,7 +44,7 @@ calc(20) should return 6765
 take your program to finish? Can you optimize so that we won't wait in pains?
 * If you implement your solution with recursion, can you do without recursion?
 * Can you handle the output correctly when the result might be too large, for example, how about `calc(10000)`?
-* You submission should look like this:
+* You submission should look like this, you may use [`Fibonacci.java`](./src/main/java/Fibonacci.java) as your skeleton:
 ```java
 public class Fibonacci {
     private int calc(int n) {
