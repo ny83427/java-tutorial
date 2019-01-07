@@ -2,7 +2,7 @@
 
 ### Motivation
 
-These exercise projects are designed for students with other programming language experience ready.
+These exercise projects are designed for students with other programming language experience already.
 While beginners still need to get familiar with basic stuff, these students would get boring and waste
 time, as a result, they are suggested to resolve some relatively complex exercises to improve their Java
 programming skills. These projects are ordered by their difficulties or workload, from easy to hard or from
