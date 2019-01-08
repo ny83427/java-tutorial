@@ -133,7 +133,6 @@ public class NumberGame {
         List<int[]> list = new ArrayList<>();
         // Keep track of each indexes, once they are found their status will change
         int[] indicators = new int[nums.length];
-        Arrays.fill(indicators, -1);
 
         Arrays.sort(nums);
         for (int i = 0; i < nums.length - 2; i++) {
@@ -142,7 +141,7 @@ public class NumberGame {
 
             for (int j = i + 1; j < nums.length; j++) {
                 int k = Arrays.binarySearch(nums, j + 1, nums.length, -nums[i] - nums[j]);
-                if (k >= 0 && indicators[i] == -1 && indicators[j] == -1 && indicators[k] == -1) {
+                if (k >= 0 && indicators[i] == 0 && indicators[j] == 0 && indicators[k] == 0) {
                     list.add(new int[]{nums[i], nums[j], nums[k]});
                     indicators[i] = indicators[j] = indicators[k] = 1;
                 }
