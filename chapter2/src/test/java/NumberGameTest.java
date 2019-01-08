@@ -104,6 +104,11 @@ class NumberGameTest {
     void threeSumWithDuplicates() {
         assertEquals(3, NumberGame.threeSums(new int[]{-1, -1, -2, -2, 3, 3, -4, -5, 9, 10, 11}).size());
         assertEquals(2, NumberGame.threeSums(new int[]{-1, -1, -2, -2, 3, 4, -4, -5, 9, 10, 11}).size());
+
+        assertNotEquals(3, NumberGame.threeSumsBruteForce(new int[]{-1, -1, -2, -2, 3, 3, -4, -5, 9, 10, 11}).size());
+        assertNotEquals(2, NumberGame.threeSumsBruteForce(new int[]{-1, -1, -2, -2, 3, 4, -4, -5, 9, 10, 11}).size());
+
+        assertNotEquals(3, NumberGame.uniqueThreeSums(new int[]{-1, -1, -2, -2, 3, 3, -4, -5, 9, 10, 11}).size());
     }
 
 }
