@@ -79,12 +79,6 @@ class NumberGameTest {
     }
 
     @Test
-    void threeSumsWithoutDuplicates() {
-        assertEquals(70, NumberGame.threeSums(thousandInts).size());
-        assertEquals(528, NumberGame.threeSums(twoThousandInts).size());
-    }
-
-    @Test
     void threeSumsBruteForceWithoutDuplicates() {
         assertEquals(70, NumberGame.threeSumsBruteForce(thousandInts).size());
         assertEquals(528, NumberGame.threeSumsBruteForce(twoThousandInts).size());
