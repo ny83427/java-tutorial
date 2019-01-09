@@ -52,6 +52,7 @@ class NumberGameTest {
         assertArrayEquals(new int[]{3, 2}, NumberGame.scanFirstTwoMaxs(new int[]{1, 2, 3}));
         assertArrayEquals(new int[]{3, 2}, NumberGame.scanFirstTwoMaxs(new int[]{3, 2, 1}));
         assertArrayEquals(new int[]{1, 1}, NumberGame.scanFirstTwoMaxs(new int[]{1, 1, 1, 1}));
+        assertArrayEquals(new int[]{7, 7}, NumberGame.scanFirstTwoMaxs(new int[]{1, 1, 7, 7}));
     }
 
     @Test
@@ -64,6 +65,7 @@ class NumberGameTest {
         assertArrayEquals(new int[]{3, 2, 1}, NumberGame.scanFirstThreeMaxs(new int[]{1, 2, 3}));
         assertArrayEquals(new int[]{6, 5, 4}, NumberGame.scanFirstThreeMaxs(new int[]{6, 5, 4, 3, 2, 1}));
         assertArrayEquals(new int[]{1, 1, 1}, NumberGame.scanFirstThreeMaxs(new int[]{1, 1, 1, 1}));
+        assertArrayEquals(new int[]{7, 7, 7}, NumberGame.scanFirstThreeMaxs(new int[]{1, 1, 1, 7, 7, 7}));
         assertArrayEquals(new int[]{1, -1, -2}, NumberGame.scanFirstThreeMaxs(new int[]{-1, -2, -3, 1}));
     }
 
