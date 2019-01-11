@@ -1,4 +1,5 @@
 import java.math.BigInteger;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -76,17 +77,20 @@ public class Fibonacci {
     public static void main(String[] args) {
         Fibonacci fib = new Fibonacci();
         Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNextLine()) {
-            int n = scanner.nextInt();
-            boolean useOptimized = scanner.next().toUpperCase().startsWith("O");
-            String method = useOptimized ? "Optimized" : "Naive";
-            final long start = System.currentTimeMillis();
+        while (scanner.hasNext()) {
             try {
+                int n = scanner.nextInt();
+                boolean useOptimized = scanner.next().toUpperCase().startsWith("O");
+                String method = useOptimized ? "Optimized" : "Naive";
+                final long start = System.currentTimeMillis();
+
                 BigInteger result = useOptimized ? fib.calc(n) : fib.calcNaively(n);
                 System.out.printf("Fibonacci number of %d is %s. %s calculation spent %s.%n",
                     n, result, method, formatElapsedTime(System.currentTimeMillis() - start));
+            } catch (InputMismatchException e) {
+                System.err.println(scanner.next() + " is not a valid integer, please correct your input!");
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             }
         }
     }
