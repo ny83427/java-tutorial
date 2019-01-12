@@ -10,6 +10,7 @@
     <modules>
         <module>chapter1</module>
         <module>chapter2</module>
+        <module>chapter4</module>
     </modules>
     <packaging>pom</packaging>
     <description>The Best Java Tutorial for Beginners</description>
