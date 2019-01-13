@@ -1,0 +1,175 @@
+{
+  "headCoach": {
+    "name": {
+      "first": "Mark",
+      "last": "Lee"
+    },
+    "age": 36,
+    "champions": 14
+  },
+  "assistantCoaches": [
+    {
+      "name": {
+        "first": "James",
+        "last": "Cui"
+      },
+      "age": 31,
+      "champions": 4
+    },
+    {
+      "name": {
+        "first": "Tingbo",
+        "last": "Cao"
+      },
+      "age": 35,
+      "champions": 6
+    }
+  ],
+  "mainPlayers": [
+    {
+      "name": {
+        "first": "Roberto",
+        "last": "Bonano"
+      },
+      "number": 1,
+      "role": "GOALKEEPER",
+      "age": 32,
+      "height": 186
+    },
+    {
+      "name": {
+        "first": "Michael",
+        "last": "Reiziger"
+      },
+      "number": 2,
+      "role": "DEFENDER",
+      "age": 32,
+      "height": 184
+    },
+    {
+      "name": {
+        "first": "Frank",
+        "last": "de Boer"
+      },
+      "number": 3,
+      "role": "DEFENDER",
+      "age": 31,
+      "height": 178
+    },
+    {
+      "name": {
+        "first": "Patrik",
+        "last": "Andersson"
+      },
+      "number": 4,
+      "role": "DEFENDER",
+      "age": 34,
+      "height": 183
+    },
+    {
+      "name": {
+        "first": "Carles",
+        "last": "Puyol"
+      },
+      "number": 5,
+      "role": "DEFENDER",
+      "age": 30,
+      "height": 175
+    },
+    {
+      "name": {
+        "first": "Xavi",
+        "last": "Hernández"
+      },
+      "number": 6,
+      "role": "MIDFIELDER",
+      "age": 28,
+      "height": 168
+    },
+    {
+      "name": {
+        "first": "Juan",
+        "middle": "Román",
+        "last": "Riquelme"
+      },
+      "number": 10,
+      "role": "MIDFIELDER",
+      "age": 30,
+      "height": 176
+    },
+    {
+      "name": {
+        "first": "Marc",
+        "last": "Overmars"
+      },
+      "number": 11,
+      "role": "MIDFIELDER",
+      "age": 32,
+      "height": 174,
+      "speed": "SUPERFAST"
+    },
+    {
+      "name": {
+        "first": "Phillip",
+        "last": "Cocu"
+      },
+      "number": 8,
+      "role": "MIDFIELDER",
+      "age": 28,
+      "height": 188
+    },
+    {
+      "name": {
+        "first": "Patrick",
+        "last": "Kluivert"
+      },
+      "number": 9,
+      "role": "FORWARD",
+      "age": 29,
+      "height": 188
+    },
+    {
+      "name": {
+        "first": "Javier",
+        "last": "Saviola"
+      },
+      "number": 7,
+      "role": "FORWARD",
+      "age": 28,
+      "height": 170,
+      "speed": "FAST"
+    }
+  ],
+  "benchPlayers": [
+    {
+      "name": {
+        "first": "Gerard",
+        "last":  "López"
+      },
+      "number": 14,
+      "role": "MIDFIELDER",
+      "age": 30,
+      "height": 182
+    },
+    {
+      "name": {
+        "first": "Fábio",
+        "last":  "Rochemback"
+      },
+      "number": 15,
+      "role": "MIDFIELDER",
+      "age": 26,
+      "height": 180
+    },
+    {
+      "name": {
+        "first": "Gaizka",
+        "last": "Mendieta"
+      },
+      "number": 17,
+      "role": "MIDFIELDER",
+      "age": 28,
+      "height": 173
+    }
+  ]
+}

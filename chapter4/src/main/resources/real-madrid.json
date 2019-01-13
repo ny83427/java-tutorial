@@ -1,0 +1,173 @@
+{
+  "headCoach": {
+    "name": {
+      "first": "Nathanael",
+      "last": "Yang"
+    },
+    "age": 35,
+    "champions": 12
+  },
+  "assistantCoaches": [
+    {
+      "name": {
+        "first": "William",
+        "last": "Liu"
+      },
+      "age": 28,
+      "champions": 3
+    },
+    {
+      "name": {
+        "first": "Jordan",
+        "last": "Wang"
+      },
+      "age": 28,
+      "champions": 3
+    }
+  ],
+  "mainPlayers": [
+    {
+      "name": {
+        "first": "Iker",
+        "last": "Casillas"
+      },
+      "number": 1,
+      "role": "GOALKEEPER",
+      "age": 30,
+      "height": 192
+    },
+    {
+      "name": {
+        "first": "Míchel",
+        "last": "Salgado"
+      },
+      "number": 2,
+      "role": "DEFENDER",
+      "age": 32,
+      "height": 175
+    },
+    {
+      "name": {
+        "first": "Roberto",
+        "last": "Carlos"
+      },
+      "number": 3,
+      "role": "DEFENDER",
+      "age": 31,
+      "height": 168,
+      "speed": "FAST"
+    },
+    {
+      "name": {
+        "first": "Fernando",
+        "last": "Hierro"
+      },
+      "number": 4,
+      "role": "DEFENDER",
+      "age": 34,
+      "height": 188
+    },
+    {
+      "name": {
+        "first": "Zinedine",
+        "last": "Zidane"
+      },
+      "number": 5,
+      "role": "MIDFIELDER",
+      "age": 32,
+      "height": 185
+    },
+    {
+      "name": {
+        "first": "Luis",
+        "last": "Figo"
+      },
+      "number": 10,
+      "role": "MIDFIELDER",
+      "age": 31,
+      "height": 180
+    },
+    {
+      "name": {
+        "first": "Guti"
+      },
+      "number": 14,
+      "role": "MIDFIELDER",
+      "age": 30,
+      "height": 180
+    },
+    {
+      "name": {
+        "first": "Zinedine",
+        "last": "Zidane"
+      },
+      "number": 5,
+      "role": "MIDFIELDER",
+      "age": 32,
+      "height": 185
+    },
+    {
+      "name": {
+        "first": "Fernando",
+        "last": "Morientes"
+      },
+      "number": 9,
+      "role": "FORWARD",
+      "age": 26,
+      "height": 186
+    },
+    {
+      "name": {
+        "first": "Raúl",
+        "middle": "González",
+        "last": "Blanco"
+      },
+      "number": 7,
+      "role": "FORWARD",
+      "age": 31,
+      "height": 180
+    },
+    {
+      "name": {
+        "first": "Ronaldo"
+      },
+      "number": 11,
+      "role": "FORWARD",
+      "age": 30,
+      "height": 185,
+      "speed": "SUPERFAST"
+    }
+  ],
+  "benchPlayers": [
+    {
+      "name": {
+        "first": "Esteban",
+        "last":  "Cambiasso"
+      },
+      "number": 19,
+      "role": "DEFENDER",
+      "age": 30,
+      "height": 177
+    },
+    {
+      "name": {
+        "first": "Santiago",
+        "last":  "Solari"
+      },
+      "number": 21,
+      "role": "MIDFIELDER",
+      "age": 30,
+      "height": 182
+    },
+    {
+      "name": {
+        "first": "Steve",
+        "last": "McManaman"
+      },
+      "number": 8,
+      "role": "FORWARD",
+      "age": 30,
+      "height": 185
+    }
+  ]
+}
