@@ -1,4 +1,6 @@
 {
+  "clubName": "Real Madrid",
+  "colorOfJersey": "White",
   "headCoach": {
     "name": {
       "first": "Nathanael",
@@ -55,7 +57,7 @@
       "role": "DEFENDER",
       "age": 31,
       "height": 168,
-      "speed": "FAST"
+      "speed": "SUPERFAST"
     },
     {
       "name": {
@@ -85,7 +87,8 @@
       "number": 10,
       "role": "MIDFIELDER",
       "age": 31,
-      "height": 180
+      "height": 180,
+      "speed": "FAST"
     },
     {
       "name": {
@@ -98,12 +101,12 @@
     },
     {
       "name": {
-        "first": "Zinedine",
-        "last": "Zidane"
+        "first": "Iván",
+        "last": "Helguera"
       },
-      "number": 5,
+      "number": 6,
       "role": "MIDFIELDER",
-      "age": 32,
+      "age": 27,
       "height": 185
     },
     {

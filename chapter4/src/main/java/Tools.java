@@ -1,20 +1,25 @@
-import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import javax.swing.*;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-class Tools {
+abstract class Tools {
+    /**
+     * Switch flag for debug log output
+     */
+    static boolean DEBUG = false;
 
     /**
-     * Play an audio file located under directory "audios", wav/mp3/aiff extensions are supported
+     * Play an audio file located under directory "audios"
      */
-    static void playAudio(final String audioFile) {
-        PlatformImpl.startup(() -> {
-            Media hit = new Media(new File("audios/" + audioFile).toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(hit);
-            mediaPlayer.play();
-        });
+    static MediaPlayer playAudio(final String audioFile) {
+        Media hit = new Media(new File("audios/" + audioFile).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(hit);
+        mediaPlayer.play();
+        return mediaPlayer;
     }
 
     static void sleepSilently(long time) {
@@ -25,4 +30,16 @@ class Tools {
         }
     }
 
+    static void setTheme() {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

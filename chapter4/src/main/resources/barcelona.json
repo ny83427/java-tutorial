@@ -1,4 +1,6 @@
 {
+  "clubName": "Barcelona",
+  "colorOfJersey": "Blue",
   "headCoach": {
     "name": {
       "first": "Mark",
@@ -74,7 +76,8 @@
       "number": 5,
       "role": "DEFENDER",
       "age": 30,
-      "height": 175
+      "height": 175,
+      "speed": "FAST"
     },
     {
       "name": {

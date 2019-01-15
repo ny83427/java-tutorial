@@ -1,7 +1,7 @@
 /**
  * Name of a giving person
  */
-public class Name {
+class Name {
 
     private String first;
 
@@ -11,24 +11,24 @@ public class Name {
 
     private String suffix;
 
-    public Name(String first, String last) {
+    Name(String first, String last) {
         this.first = first;
         this.last = last;
     }
 
-    public Name(String first, String middle, String last) {
+    Name(String first, String middle, String last) {
         this(first, last);
         this.middle = middle;
     }
 
-    public Name(String first, String middle, String last, String suffix) {
+    Name(String first, String middle, String last, String suffix) {
         this.first = first;
         this.middle = middle;
         this.last = last;
         this.suffix = suffix;
     }
 
-    public String getFirst() {
+    String getFirst() {
         return first;
     }
 
