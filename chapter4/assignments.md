@@ -3,7 +3,7 @@
 ### Required
 Welcome to Object Oriented Programming world! Let's design a simple soccer gameBoard using OOP design thinking.
 
-![](images/soccer-gameBoard.jpg)
+![](images/soccer-game.jpg)
 
 You would have either played soccer or at least heard of this most popular sports gameBoard in the world. But
 it's not that easy to organize a formal match. You need to prepare a lot of stuff, below is a minimum survival

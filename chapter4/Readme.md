@@ -17,8 +17,10 @@ default settings directly
 You just don't. No pull request, no bug report. Just let it be. Thank you man.😅
 
 ### Last Words
-Coding, and
-Keep coding, make it work
-And keep coding, make it better
-And keep coding, make it easier to maintain
-And keep coding, to understand or reject those buzz words of OOP
+Coding, and  
+Keep coding, make it work  
+And keep coding, make it better  
+And keep coding, make it easier to maintain  
+And keep coding, to understand or reject  
+Those buzz words of OOP  
+And keep coding
