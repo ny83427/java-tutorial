@@ -30,10 +30,14 @@ abstract class Tools {
         }
     }
 
+    /**
+     * Set Swing Theme: Windows or Nimbus
+     */
     static void setTheme() {
+        String theme = System.getProperty("os.name").startsWith("Windows") ? "Windows" : "Nimbus";
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if (theme.equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
