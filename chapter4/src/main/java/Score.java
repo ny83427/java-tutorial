@@ -1,4 +1,11 @@
+import java.util.concurrent.TimeUnit;
+
 class Score {
+    /**
+     * Duration of a whole match in game: {@value} minutes
+     */
+    private static final int WHOLE_MATCH_GAME_TIME = 3;
+
     private String homeTeamName;
 
     private String visitingTeamName;
@@ -9,8 +16,6 @@ class Score {
 
     private long startTime;
 
-    private boolean timeout;
-
     Score(String homeTeamName, String visitingTeamName) {
         this.homeTeamName = homeTeamName;
         this.visitingTeamName = visitingTeamName;
@@ -19,7 +24,7 @@ class Score {
     }
 
     boolean isTimeout() {
-        return timeout;
+        return System.currentTimeMillis() - startTime >= TimeUnit.MINUTES.toMillis(WHOLE_MATCH_GAME_TIME);
     }
 
     void updateHomeTeam() {
@@ -31,11 +36,9 @@ class Score {
     }
 
     private String timeElapsed() {
-        // 3 mins in game maps to 90 mins in real-life
-        long time = (System.currentTimeMillis() - startTime) * 30;
+        long time = (System.currentTimeMillis() - startTime) * 90 / WHOLE_MATCH_GAME_TIME;
         int minute = (int) (time / 60000);
         int seconds = (int) ((time - minute * 60000) / 1000);
-        timeout = minute >= 90;
         return String.format("%02d:%02d", minute, seconds);
     }
 

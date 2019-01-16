@@ -39,7 +39,7 @@ abstract class Tools {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

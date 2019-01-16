@@ -37,13 +37,14 @@ public class Game extends JFrame {
         this.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - this.getWidth()) / 2, locationY);
     }
 
-    private void transparent(JButton... buttons) {
+    private void setExtraAttributesForButtons(JButton... buttons) {
         for (JButton button : buttons) {
             button.setBorder(null);
             button.setBorderPainted(false);
             button.setFocusPainted(false);
             button.setContentAreaFilled(false);
             button.setOpaque(false);
+
             button.setFont(font);
         }
     }
@@ -53,7 +54,7 @@ public class Game extends JFrame {
         this.setTitle("The Most Boring Soccer Game In History");
         this.setIconImage(icon.getImage());
         this.setResizable(false);
-        this.transparent(startBtn, resetBtn, exitBtn);
+        this.setExtraAttributesForButtons(startBtn, resetBtn, exitBtn);
 
         startBtn.addActionListener(e -> startGame());
         resetBtn.addActionListener(e -> resetGame());
@@ -213,7 +214,7 @@ public class Game extends JFrame {
     private static int indexOf(String input, java.util.List<String> elements) {
         if (input.matches("[0-9]")) {
             int number = Integer.valueOf(input);
-            return number <= elements.size() ? number - 1: -1;
+            return number <= elements.size() ? number - 1 : -1;
         } else {
             if (input.length() == 0) return -1;
 
