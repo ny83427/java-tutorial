@@ -1,15 +1,15 @@
 ## Assignments of Chapter 4
 
 ### Required
-Welcome to Object Oriented Programming world! Let's design a simple soccer gameBoard using OOP design thinking.
+Welcome to Object Oriented Programming world! Let's design a simple soccer game using OOP design thinking.
 
 ![](images/soccer-game.jpg)
 
-You would have either played soccer or at least heard of this most popular sports gameBoard in the world. But
+You would have either played soccer or at least heard of this most popular sports game in the world. But
 it's not that easy to organize a formal match. You need to prepare a lot of stuff, below is a minimum survival
 task list:
 
-+ Find a stadium where there is a formal soccer field with fixed height and length
++ Find a stadium where there is a formal soccer field with fixed width and length
 + Find two soccer teams, each team shall have one head coach, one or more assistant coach, 11 players and at least 3 substitutes
 + Coach should have attributes like name, age, how many champions won in his carrier
 + Each player should have his name, number, age, height(in cm), position(Forward, Midfielder, Defender, Goalie) in the field
@@ -19,16 +19,16 @@ task list:
 + Audiences: there would be many crazy soccer fans shouting there
 + Rules(only some of them, so that you will not be scared):
   + There will be two halves, each 45 minutes
-  + If any of these criteria were matched then the gameBoard will be paused:
+  + If any of these criteria were matched then the game will be paused:
     + Soccer ball is out of the field
     + Referee whistles when one player fouls against another
-  + If any team scores, gameBoard will stop for a while until then the other team kick off in the middle
+  + If any team scores, game will stop for a while until then the other team kick off in the middle
 
 Based on these minimum required classes and the simplified real-world example, please design a series of classes
-to simulate a soccer gameBoard in text mode only.
+to simulate a soccer game in text mode only.
 
 ```java
-java GameBoard
+java Game
 // When user input start, Start or START, prompt available teams for him to select
 :user-input start
 :system-out Here we go! Please select home team first:
@@ -46,7 +46,7 @@ java GameBoard
 
 Your code might be like this(just for your reference, you can do it on your own):
 ```java
-public class GameBoard {
+public class Game {
     private Stadium stadium;
     private Team homeTeam;
     private Team visitingTeam;
@@ -55,7 +55,7 @@ public class GameBoard {
     private Referee[] linesmen;
     
     public static void main(String[] args){
-        GameBoard gameBoard = new GameBoard();
+        Game game = new Game();
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             if (scanner.nextLine().equalsIgnoreCase("Start")) {
@@ -69,7 +69,7 @@ public class GameBoard {
                 homeTeam.players = [...];
                 homeTeam.substitutes = [...];
                 
-                gameBoard.homeTeam = homeTeam;
+                game.homeTeam = homeTeam;
             }
             // More stuff here and there...
         }
@@ -78,7 +78,7 @@ public class GameBoard {
 }
 ```
 
-You need to submit at least `GameBoard.java`, `Stadium.java`, `SoccerBall.java`, `Team.java`, `Player.java`, `Coach.java` and `Referee.java`. You may
+You need to submit at least `Game.java`, `Stadium.java`, `SoccerBall.java`, `Team.java`, `Player.java`, `Coach.java` and `Referee.java`. You may
 add other classes freely according to your own design, for example, the invisible `Rule` and visible `Audience`.
 
 For `SoccerBall.java`, besides attributes of color and size, please maintain its location in the field, so that we can know whether it's a goal,
@@ -94,13 +94,13 @@ events if they violate the rules declared?
 :system-out Benzema shoots and...scores! Goal!
 :system-out Now the score is Real Madrid 1 : 0 Barcelona
 :system-out Messi fouls against Modric! Referee whistled!
-:system-out GameBoard paused for 30 seconds // Your program can sleep 30MS to simulate 30 seconds
+:system-out Game paused for 30 seconds // Your program can sleep 30MS to simulate 30 seconds
 ......
 :system-out The match ended with the score of Real Madrid 2:1 over Barcelona!
 ```
 
 ### Champion
-Text output is not straightforward and cool, can you design a simple user interface to visualize the soccer gameBoard?
+Text output is not straightforward and cool, can you design a simple user interface to visualize the soccer game?
 
 You can use squares of different colors to simulate players, a circle to simulate soccer ball. A black square for referee,
 two yellow square at each line for the linesman.
