@@ -4,6 +4,7 @@ import javafx.scene.media.MediaPlayer;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -153,9 +154,10 @@ public class Game extends JFrame {
         System.out.println("= -> Input 'Default' to begin pre-defined game=");
         System.out.println("===============================================");
 
-        java.util.List<String> teams = Arrays.asList("Real Madrid", "Barcelona", "Manchester United",
-            "Chelsea", "Juventus", "AC Milan");
-        java.util.List<String> stadiums = Arrays.asList("San Siro", "Nou Camp", "Bernabeu", "Old Trafford");
+        // Attention: Arrays.asList cannot remove the selected element
+        java.util.List<String> teams = new ArrayList<>(Arrays.asList("Real Madrid", "Barcelona", "Manchester United",
+            "Chelsea", "Juventus", "AC Milan"));
+        java.util.List<String> stadiums = new ArrayList<>(Arrays.asList("San Siro", "Nou Camp", "Bernabeu", "Old Trafford"));
 
         Scanner scanner = new Scanner(System.in);
         boolean started = false;
@@ -163,6 +165,7 @@ public class Game extends JFrame {
         while (scanner.hasNextLine()) {
             // Status transition will be introduced later
             String input = scanner.nextLine().trim();
+            int currentIndex;
             if ("Default".equalsIgnoreCase(input) && !started) {
                 board.applyDefaultSettings();
                 scanner.close();
@@ -171,20 +174,25 @@ public class Game extends JFrame {
                 System.out.println("Here we go! Please select home team first:");
                 System.out.println(teams);
                 started = true;
-            } else if (started && homeTeamName == null && teams.indexOf(input) != -1) {
+            } else if (started && homeTeamName == null && (currentIndex = indexOf(input, teams)) != -1) {
                 board.setHomeTeam(Team.fromJSON("real-madrid.json"));
-                homeTeamName = input;
+
+                homeTeamName = teams.get(currentIndex);
                 System.out.println("Great! You have selected " + homeTeamName + " as the home team.");
                 System.out.println("Please select the visiting team then:");
+
+                // Avoid home team and visiting team are same
+                teams.remove(currentIndex);
                 System.out.println(teams);
-            } else if (started && homeTeamName != null && visitingTeamName == null && teams.indexOf(input) != -1 &&
-                !input.equals(homeTeamName)) {
-                visitingTeamName = input;
+            } else if (started && homeTeamName != null && visitingTeamName == null &&
+                (currentIndex = indexOf(input, teams)) != -1) {
+                visitingTeamName = teams.get(currentIndex);
                 board.setVisitingTeam(Team.fromJSON("barcelona.json"));
                 System.out.println("Great! You have selected " + visitingTeamName + " as visiting team.");
                 System.out.println("Please select the stadium for the match:\n" + stadiums);
-            } else if (started && homeTeamName != null && visitingTeamName != null && stadiums.indexOf(input) != -1) {
-                board.setField(input);
+            } else if (started && homeTeamName != null && visitingTeamName != null &&
+                (currentIndex = indexOf(input, stadiums)) != -1) {
+                board.setField(stadiums.get(currentIndex));
                 System.out.println("Good job! All are settle down. Game will initGame in " + input + " Stadium soon.");
                 scanner.close();
                 break;
@@ -195,6 +203,29 @@ public class Game extends JFrame {
 
         board.initialize().initLocations();
         initGame(board);
+    }
+
+    /**
+     * Support whole match, or first letter match, or access via index directly
+     * For example: Real Madrid, R or 1 will both return 0(index is 0 based)
+     * Enhance this as it's required by assignment specification
+     */
+    private static int indexOf(String input, java.util.List<String> elements) {
+        if (input.matches("[0-9]")) {
+            int number = Integer.valueOf(input);
+            return number <= elements.size() ? number - 1: -1;
+        } else {
+            if (input.length() == 0) return -1;
+
+            for (int i = 0; i < elements.size(); i++) {
+                if (elements.get(i).equalsIgnoreCase(input) ||
+                    elements.get(i).toUpperCase().startsWith(input.toUpperCase())) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
     }
 
     private static MediaPlayer BG_PLAYER;
