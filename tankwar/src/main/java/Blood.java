@@ -1,7 +1,8 @@
 import java.awt.*;
 
 class Blood {
-    private int x, y, w, h;
+    private int x, y;
+    private final int w, h;
 
     private int step = 0;
 
@@ -11,11 +12,15 @@ class Blood {
         return live;
     }
 
-    void setLive(boolean live) {
-        this.live = live;
+    void reAppearRandomly() {
+        this.live = Tools.nextInt(4) == 2;
     }
 
-    private int[][] points = {
+    void disappear() {
+        this.live = false;
+    }
+
+    private final int[][] points = {
         {350, 300}, {360, 300}, {375, 275}, {400, 200}, {360, 270}, {365, 290}, {340, 280}
     };
 

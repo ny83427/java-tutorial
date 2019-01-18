@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +17,16 @@ enum Direction {
     Down("D", 0, 1),
     LeftDown("LD", -1, 1);
 
-    final String abbrev;
+    private final String abbrev;
 
+    /**
+     * factor to multiply with horizontal moving speed
+     */
     final int xFactor;
 
+    /**
+     * factor to multiply with vertical moving speed
+     */
     final int yFactor;
 
     Direction(String abbrev, int xFactor, int yFactor) {
@@ -28,10 +35,18 @@ enum Direction {
         this.yFactor = yFactor;
     }
 
-    private static Map<String, Image> CACHE = new HashMap<>();
+    private static final Map<String, Image> CACHE = new HashMap<>();
 
+    /**
+     * <pre>
+     * get image of current object in giving direction, based on convention over configuration
+     * image name should follow pattern of "${objectType}${direction.abbrev}.gif"
+     * this would simplify the original approach greatly and reduce a lot of code
+     * </pre>
+     * @param objectType    object type
+     */
     Image get(String objectType) {
         return CACHE.computeIfAbsent(objectType + this.abbrev,
-            key -> Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/" + key + ".gif")));
+            key -> new ImageIcon(this.getClass().getResource("images/" + key + ".gif")).getImage());
     }
 }

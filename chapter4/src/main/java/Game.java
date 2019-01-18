@@ -1,4 +1,4 @@
-import com.sun.javafx.application.PlatformImpl;
+import javafx.application.Platform;
 import javafx.scene.media.MediaPlayer;
 
 import javax.swing.*;
@@ -133,6 +133,7 @@ public class Game extends JFrame {
     }
 
     public static void main(String[] args) {
+        Platform.startup(() -> {});
         final GameBoard board = new GameBoard();
         // If splash has been set via VM options, skip text mode
         // java -splash:images/champions.jpg Game
@@ -232,7 +233,6 @@ public class Game extends JFrame {
     private static MediaPlayer BG_PLAYER;
 
     private static void initGame(GameBoard board) {
-        PlatformImpl.startup(() -> {});
         BG_PLAYER = Tools.playAudio("UEFA-Champions-League.mp3");
 
         Tools.setTheme();

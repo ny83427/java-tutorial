@@ -2,7 +2,7 @@ import java.awt.*;
 
 class Wall {
 
-    int x, y, w, h;
+    private final int x, y, w, h;
 
     Wall(int x, int y, int w, int h) {
         this.x = x;

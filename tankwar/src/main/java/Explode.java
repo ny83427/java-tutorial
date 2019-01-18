@@ -3,15 +3,10 @@ import java.awt.*;
 
 class Explode {
 
-    int x, y;
-    private boolean live = true;
+    private int x, y;
+    private int step = 0;
 
-    int step = 0;
-
-    private static boolean init = false;
-
-    private static Image[] IMAGES = new Image[11];
-
+    private static final Image[] IMAGES = new Image[11];
     static {
         for (int i = 0; i < IMAGES.length; i++) {
             IMAGES[i] = new ImageIcon(Explode.class.getResource("images/" + i + ".gif")).getImage();
@@ -24,26 +19,18 @@ class Explode {
     }
 
     void draw(Graphics g) {
-        if (!init) {
-            for (int i = 0; i < IMAGES.length; i++) {
-                g.drawImage(IMAGES[i], -100, -100, null);
-            }
-            init = true;
-        }
-
+        // display 10 images continuously to simulate animation effect, thus will end after last frame
+        boolean live = step < IMAGES.length;
         if (!live) {
-            TankWar.getInstance().explodes.remove(this);
-            return;
-        }
-
-        if (step == IMAGES.length) {
-            live = false;
+            TankWar.getInstance().removeExplode(this);
             step = 0;
             return;
         }
 
         g.drawImage(IMAGES[step], x, y, null);
-
+        if (step == 0) {
+            Tools.playAudio("explode.wav");
+        }
         step++;
     }
 

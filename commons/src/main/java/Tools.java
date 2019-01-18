@@ -3,6 +3,7 @@ import javafx.scene.media.MediaPlayer;
 
 import javax.swing.*;
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,13 +29,19 @@ abstract class Tools {
     }
 
     /**
-     * Play an audio file located under directory "audios"
+     * Play an audio file located under directory "audios" or under resources
      */
     static MediaPlayer playAudio(final String audioFile) {
-        Media hit = new Media(new File("audios/" + audioFile).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(hit);
-        mediaPlayer.play();
-        return mediaPlayer;
+        File file = new File("audios/" + audioFile);
+        try {
+            Media hit = file.exists() && file.isFile() ? new Media(file.toURI().toString())
+                : new Media(Tools.class.getResource("/" + audioFile).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(hit);
+            mediaPlayer.play();
+            return mediaPlayer;
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     static void sleepSilently(long time) {
