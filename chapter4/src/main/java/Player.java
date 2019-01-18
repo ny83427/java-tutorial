@@ -2,7 +2,6 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 class Player extends Person {
     private enum Role {
@@ -84,13 +83,13 @@ class Player extends Person {
     }
 
     void shoot(Ball ball) {
-        Tools.playAudio("kick-" + (1 + new Random().nextInt(2)) + ".wav");
+        Tools.playAudio("kick-" + (1 + Tools.nextInt(2)) + ".wav");
 
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%s shoots the ball and it moves from %s to ",
             this.getName(), ball.getLocation()));
 
-        ball.getLocation().move(-80 + new Random().nextInt(101), -60 + new Random().nextInt(81), false);
+        ball.getLocation().move(-80 + Tools.nextInt(101), -60 + Tools.nextInt(81), false);
 
         sb.append(ball.getLocation().toString());
         if (Tools.DEBUG)
@@ -102,7 +101,7 @@ class Player extends Person {
         sb.append(String.format("%s passes the ball and it moves from %s to ",
             this.getName(), ball.getLocation()));
 
-        ball.getLocation().move(-60 + new Random().nextInt(81), -48 + new Random().nextInt(69), false);
+        ball.getLocation().move(-60 + Tools.nextInt(81), -48 + Tools.nextInt(69), false);
 
         sb.append(ball.getLocation().toString());
         if (Tools.DEBUG)
@@ -115,13 +114,13 @@ class Player extends Person {
 
         // restrict goal keeper, or it will be a total joke
         if (this.role == Role.GOALKEEPER) {
-            int delta = new Random().nextInt(165 - Constants.ROLE_SIZE / 2);
+            int delta = Tools.nextInt(165 - Constants.ROLE_SIZE / 2);
             Location location = this.getLocation();
             this.setLocation(new Location(location.x < Constants.FIELD_WIDTH / 2 ? delta : (Constants.FIELD_WIDTH - delta),
-                Constants.FIELD_HEIGHT / 2 + (new Random().nextBoolean() ? new Random().nextInt(40) : -new Random().nextInt(40))));
+                Constants.FIELD_HEIGHT / 2 + (Tools.nextBoolean() ? Tools.nextInt(40) : -Tools.nextInt(40))));
         } else {
-            this.getLocation().move(-20 + new Random().nextInt(this.speed.value),
-                -15 + new Random().nextInt(this.speed.value));
+            this.getLocation().move(-20 + Tools.nextInt(this.speed.value),
+                -15 + Tools.nextInt(this.speed.value));
         }
 
         sb.append(this.getLocation());

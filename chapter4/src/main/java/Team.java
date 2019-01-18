@@ -7,7 +7,6 @@ import org.apache.commons.io.IOUtils;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 
 /**
  * <pre>
@@ -69,11 +68,11 @@ class Team implements Drawable {
     }
 
     void play(Ball ball) {
-        int selected = new Random().nextInt(mainPlayers.length);
-        boolean kick = new Random().nextInt(13) == 8;
+        int selected = Tools.nextInt(mainPlayers.length);
+        boolean kick = Tools.nextInt(13) == 8;
         for (int i = 0; i < mainPlayers.length; i++) {
             if (i == selected && kick) {
-                if (new Random().nextBoolean()) {
+                if (Tools.nextBoolean()) {
                     mainPlayers[i].shoot(ball);
                 } else {
                     mainPlayers[i].pass(ball);
@@ -84,7 +83,7 @@ class Team implements Drawable {
         }
 
         if (!kick)
-            ball.getLocation().move(-40 + new Random().nextInt(81), -25 + new Random().nextInt(56), false);
+            ball.getLocation().move(-40 + Tools.nextInt(81), -25 + Tools.nextInt(56), false);
     }
 
     static Team fromJSON(String resource) {

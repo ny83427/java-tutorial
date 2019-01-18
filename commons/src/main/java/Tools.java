@@ -3,6 +3,7 @@ import javafx.scene.media.MediaPlayer;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +12,20 @@ abstract class Tools {
      * Switch flag for debug log output
      */
     static boolean DEBUG = false;
+
+    private static Random RANDOM = new Random();
+
+    static boolean nextBoolean() {
+        return RANDOM.nextBoolean();
+    }
+
+    /**
+     * generate a random number less than giving number
+     * @param endExclusive  exclusive maximum number
+     */
+    static int nextInt(final int endExclusive) {
+        return RANDOM.nextInt(endExclusive);
+    }
 
     /**
      * Play an audio file located under directory "audios"

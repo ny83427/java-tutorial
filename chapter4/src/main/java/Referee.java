@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.Random;
 
 class Referee extends Person {
 
@@ -17,7 +16,7 @@ class Referee extends Person {
     private static final String[] AUDIO_FILES = {"whistle-1.wav", "whistle-2.aiff", "whistle-3.aiff"};
 
     void actRandomly() {
-        if (new Random().nextInt(33) == 3) {
+        if (Tools.nextInt(33) == 3) {
             whistle();
         } else {
             run();
@@ -25,11 +24,11 @@ class Referee extends Person {
     }
 
     void whistle() {
-        Tools.playAudio(AUDIO_FILES[new Random().nextInt(AUDIO_FILES.length)]);
+        Tools.playAudio(AUDIO_FILES[Tools.nextInt(AUDIO_FILES.length)]);
     }
 
     private void run() {
-        this.getLocation().move(-30 + new Random().nextInt(61), -20 + new Random().nextInt(41));
+        this.getLocation().move(-30 + Tools.nextInt(61), -20 + Tools.nextInt(41));
     }
 
     @Override

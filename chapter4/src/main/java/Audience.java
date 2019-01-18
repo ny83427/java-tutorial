@@ -1,6 +1,3 @@
-import java.util.Random;
-
-
 class Audience {
 
     private int homeTeamFans;
@@ -16,7 +13,7 @@ class Audience {
      * Soccer fans would cry and cheer for their teams
      */
     void cheerRandomly() {
-        if (new Random().nextInt(21) == 5) {
+        if (Tools.nextInt(21) == 5) {
             Tools.playAudio("cheer.wav");
             if (Tools.DEBUG)
                 System.out.println(String.format("%d home team supporters are cheering and %d visiting team " +

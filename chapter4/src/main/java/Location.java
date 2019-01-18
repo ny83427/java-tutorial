@@ -1,6 +1,3 @@
-import java.util.Random;
-
-
 /**
  * Location in the soccer field, such as each player, the ball, the referee and linesmen
  */
@@ -28,10 +25,10 @@ class Location {
 
     void handleOutOfBound() {
         if (this.x <= 0 || this.x >= Constants.FIELD_WIDTH - Constants.ROLE_SIZE)
-            x = new Random().nextInt(Constants.FIELD_WIDTH);
+            x = Tools.nextInt(Constants.FIELD_WIDTH);
 
         if (this.y <= 0 || this.y >= Constants.FIELD_HEIGHT - Constants.ROLE_SIZE)
-            y = Math.abs(new Random().nextInt(Constants.FIELD_HEIGHT) - Constants.ROLE_SIZE);
+            y = Math.abs(Tools.nextInt(Constants.FIELD_HEIGHT) - Constants.ROLE_SIZE);
     }
 
     @Override
