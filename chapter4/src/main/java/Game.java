@@ -195,7 +195,7 @@ public class Game extends JFrame {
             } else if (started && homeTeamName != null && visitingTeamName != null &&
                 (currentIndex = indexOf(input, stadiums)) != -1) {
                 board.setField(stadiums.get(currentIndex));
-                System.out.println("Good job! All are settle down. Game will initGame in " + input + " Stadium soon.");
+                System.out.println("Good job! All are settle down. Game will start in " + input + " Stadium soon.");
                 scanner.close();
                 break;
             } else {
