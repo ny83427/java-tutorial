@@ -8,9 +8,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class TankWar extends JComponent {
-	private static final long serialVersionUID = -6766726706227546163L;
+    private static final long serialVersionUID = -6766726706227546163L;
 
-	static final int WIDTH = 800, HEIGHT = 600;
+    static final int WIDTH = 800, HEIGHT = 600;
 
     private static final int INIT_ENEMY_TANK_ROWS = 3;
 
@@ -94,7 +94,7 @@ class TankWar extends JComponent {
         this.start();
     }
 
-    private void start() {
+    void start() {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
@@ -190,7 +190,6 @@ class TankWar extends JComponent {
         // KeyListeners need to be on the focused component to work
         tankWar.setFocusable(true);
         frame.setVisible(true);
-        tankWar.start();
     }
 
 }

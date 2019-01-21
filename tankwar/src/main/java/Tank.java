@@ -147,7 +147,9 @@ class Tank implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_F2) {
+        if (key == KeyEvent.VK_SPACE) {
+            TankWar.getInstance().start();
+        } else if (key == KeyEvent.VK_F2) {
             if (!this.isLive()) {
                 this.setLive(true);
                 this.hp = MAX_HP;
