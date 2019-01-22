@@ -3,6 +3,17 @@
 ### A Simple Demo
 [![Solution Demo](images/screenshot.png)](https://www.youtube.com/watch?v=HNdGkdN7U0c&feature=youtu.be)
 
+### Run at Terminal
+```cmd
+:: under java-tutorial root directory
+mvn clean package
+cd chapter4
+:: make sure JDK11 is before JDK8 if they were all in path
+set PATH=C:\Program Files\Java\jdk-11.0.2\bin;%PATH%;
+:: for linux, replace ';' with ':'
+java -cp "target/deps/*;target/classes/" Game
+```
+
 ### Attention, attention, please
 * From Chapter 4 on, solutions will be developed and tested under JDK11
 * Please set Working Directory as `$MODULE_DIR$` because this is a multi-module project

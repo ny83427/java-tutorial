@@ -1,3 +1,6 @@
+import com.diogonunes.jcdp.color.ColoredPrinter;
+import com.diogonunes.jcdp.color.api.Ansi.BColor;
+import com.diogonunes.jcdp.color.api.Ansi.FColor;
 import javafx.application.Platform;
 import javafx.scene.media.MediaPlayer;
 
@@ -144,6 +147,9 @@ public class Game extends JFrame {
             return;
         }
 
+        ColoredPrinter cp = new ColoredPrinter.Builder(1, false)
+            .foreground(FColor.GREEN).background(BColor.BLACK).build();
+
         System.out.println("===============================================");
         System.out.println("=                                             =");
         System.out.println("=   WELCOME TO THE MOST BORING SOCCER GAME!   =");
@@ -164,47 +170,67 @@ public class Game extends JFrame {
         Scanner scanner = new Scanner(System.in);
         boolean started = false;
         String homeTeamName = null, visitingTeamName = null;
+        final String prefix = " -> ";
         while (scanner.hasNextLine()) {
             // Status transition will be introduced later
+            // Or using continue to control flow
             String input = scanner.nextLine().trim();
+            setPromptFormat(cp);
+
             int currentIndex;
             if ("Default".equalsIgnoreCase(input) && !started) {
                 board.applyDefaultSettings();
                 scanner.close();
                 break;
             } else if ("Start".equalsIgnoreCase(input) && !started) {
-                System.out.println("Here we go! Please select home team first:");
-                System.out.println(teams);
+                cp.println(prefix + "Here we go! Please select home team first:");
+                cp.println(prefix + join(teams));
                 started = true;
             } else if (started && homeTeamName == null && (currentIndex = indexOf(input, teams)) != -1) {
                 board.setHomeTeam(Team.fromJSON("real-madrid.json"));
 
                 homeTeamName = teams.get(currentIndex);
-                System.out.println("Great! You have selected " + homeTeamName + " as the home team.");
-                System.out.println("Please select the visiting team then:");
+                cp.println(prefix + "Great! You have selected " + homeTeamName + " as the home team.");
+                cp.println(prefix + "Please select the visiting team then:");
 
                 // Avoid home team and visiting team are same
                 teams.remove(currentIndex);
-                System.out.println(teams);
+                cp.println(prefix + join(teams));
             } else if (started && homeTeamName != null && visitingTeamName == null &&
                 (currentIndex = indexOf(input, teams)) != -1) {
                 visitingTeamName = teams.get(currentIndex);
                 board.setVisitingTeam(Team.fromJSON("barcelona.json"));
-                System.out.println("Great! You have selected " + visitingTeamName + " as visiting team.");
-                System.out.println("Please select the stadium for the match:\n" + stadiums);
+                cp.println(prefix + "Great! You have selected " + visitingTeamName + " as visiting team.");
+                cp.println(prefix + "Please select the stadium for the match:");
+                cp.println(prefix + join(stadiums));
             } else if (started && homeTeamName != null && visitingTeamName != null &&
                 (currentIndex = indexOf(input, stadiums)) != -1) {
-                board.setField(stadiums.get(currentIndex));
-                System.out.println("Good job! All are settle down. Game will start in " + input + " Stadium soon.");
+                String stadium = stadiums.get(currentIndex);
+                board.setField(stadium);
+                cp.println(prefix + "Good job! All are settle down. Game will start in " + stadium + " Stadium soon.");
                 scanner.close();
                 break;
             } else {
-                System.out.println("OOPS! Dude I can't understand what you are looking for.\uD83D\uDE02");
+                cp.setForegroundColor(FColor.RED);
+                cp.println(prefix + "OOPS! Dude I can't understand what you are looking for.\uD83D\uDE02");
             }
+
+            cp.clear();
         }
 
+        cp.clear();
         board.initialize().initLocations();
         initGame(board);
+    }
+
+    private static void setPromptFormat(ColoredPrinter cp) {
+        cp.setForegroundColor(FColor.GREEN);
+        cp.setBackgroundColor(BColor.BLACK);
+    }
+
+    private static <T> String join(java.util.List<T> list) {
+        String s = list.toString();
+        return s.substring(1, s.length() - 1);
     }
 
     /**
