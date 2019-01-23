@@ -11,5 +11,12 @@
 
     <artifactId>tankwar</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>11.0.1</version>
+        </dependency>
+    </dependencies>
 
 </project>

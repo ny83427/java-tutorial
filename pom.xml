@@ -18,14 +18,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.language.level>1.8</java.language.level>
+        <java.language.level>11</java.language.level>
     </properties>
 
     <profiles>
         <profile>
-            <id>disable-java8-doclint</id>
+            <id>disable-java11-doclint</id>
             <activation>
-                <jdk>[1.8,)</jdk>
+                <jdk>[11,)</jdk>
             </activation>
             <properties>
                 <additionalparam>-Xdoclint:none</additionalparam>
