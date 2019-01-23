@@ -46,6 +46,14 @@ class TankWar extends JComponent {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(250, 100, 300, 20);
+        g.fillRect(100, 200, 20, 150);
+        g.fillRect(680, 200, 20, 150);
+
+        g.setColor(Color.MAGENTA);
+        g.fillRect(360, 270, 15, 15);
+
         g.setColor(Color.WHITE);
         g.setFont(new Font("Default", Font.BOLD, 14));
         g.drawString("Missiles: " + Tools.nextInt(10), 10, 50);
