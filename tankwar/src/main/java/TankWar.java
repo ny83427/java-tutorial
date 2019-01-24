@@ -3,9 +3,9 @@ import javafx.application.Platform;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 class TankWar extends JComponent {
     private static final long serialVersionUID = -6766726706227546163L;
@@ -23,26 +23,25 @@ class TankWar extends JComponent {
     private List<Tank> enemyTanks;
     private List<Missile> missiles;
     private List<Explode> explodes;
-    private final Wall[] walls;
-    private final AtomicInteger enemiesKilled = new AtomicInteger(0);
+    private final List<Wall> walls;
+    private int enemiesKilled;
 
     private TankWar() {
-        this.walls = new Wall[] {
+        this.walls = Arrays.asList(
             new Wall(250, 100, 300, 20),
             new Wall(100, 200, 20, 150),
             new Wall(680, 200, 20, 150)
-        };
+        );
         this.init();
     }
 
     private void init() {
         this.tank = new Tank(WIDTH / 2, 50);
         this.tank.initDirection(Direction.Down);
-        // there would be read and write concurrently
-        this.enemyTanks = new CopyOnWriteArrayList<>();
+        this.enemyTanks = new ArrayList<>();
         this.initEnemyTanks();
-        this.missiles = new CopyOnWriteArrayList<>();
-        this.explodes = new CopyOnWriteArrayList<>();
+        this.missiles = new ArrayList<>();
+        this.explodes = new ArrayList<>();
         this.blood = new Blood();
         // Attention! As game can restart again and gain, key listener would be accumulated again and again
         // As a result, previous listeners must be removed before add current tank
@@ -53,25 +52,8 @@ class TankWar extends JComponent {
         this.addKeyListener(this.tank);
     }
 
-    Blood getBlood() {
-        return this.blood;
-    }
-
-    void removeEnemyTank(Tank tank) {
-        this.enemiesKilled.addAndGet(1);
-        this.enemyTanks.remove(tank);
-    }
-
     void addMissile(Missile missile) {
         this.missiles.add(missile);
-    }
-
-    void removeMissile(Missile missile) {
-        this.missiles.remove(missile);
-    }
-
-    void removeExplode(Explode explode) {
-        this.explodes.remove(explode);
     }
 
     void addExplode(Explode explode) {
@@ -89,7 +71,7 @@ class TankWar extends JComponent {
     }
 
     void restart() {
-        this.enemiesKilled.set(0);
+        this.enemiesKilled = 0;
         this.init();
         this.start();
     }
@@ -101,6 +83,7 @@ class TankWar extends JComponent {
                 while (tank.isLive()) {
                     try {
                         repaint();
+                        triggerEvent();
                         Tools.sleepSilently(REPAINT_INTERVAL);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -118,57 +101,89 @@ class TankWar extends JComponent {
         if (!tank.isLive()) {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, WIDTH, HEIGHT);
+
             g.setColor(Color.RED);
             g.setFont(new Font("Default", Font.BOLD, 100));
             g.drawString("GAME OVER", 80, HEIGHT / 2 - 40);
-            g.setColor(Color.WHITE);
 
+            g.setColor(Color.WHITE);
             g.setFont(new Font("Default", Font.BOLD, 50));
             g.drawString("Press F2 to Start", 180, HEIGHT / 2 + 60);
-            return;
+        } else {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, WIDTH, HEIGHT);
+
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Default", Font.BOLD, 14));
+            g.drawString("Missiles: " + missiles.size(), 10, 50);
+            g.drawString("Explodes: " + explodes.size(), 10, 70);
+            g.drawString("Our Tank HP: " + tank.getHp(), 10, 90);
+            g.drawString("Enemies Left: " + enemyTanks.size(), 10, 110);
+            g.drawString("Enemies Killed: " + enemiesKilled, 10, 130);
+
+            this.drawGameObjects(missiles, g);
+            this.drawGameObjects(explodes, g);
+            this.drawGameObjects(explodes, g);
+            this.drawGameObjects(enemyTanks, g);
+            this.drawGameObjects(walls, g);
+
+            this.drawGameObject(tank, g);
+            this.drawGameObject(blood, g);
         }
+    }
 
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+    private <T extends GameObject> void drawGameObjects(List<T> objects, Graphics g) {
+        // Don't use foreach or iterator here to avoid java.util.ConcurrentModificationException
+        // Or use CopyOnWriteArrayList instead of ArrayList so that foreach can be safely used
+        for (int i = 0; i < objects.size(); i++) {
+            this.drawGameObject(objects.get(i), g);
+        }
+    }
 
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Default", Font.BOLD, 14));
-        g.drawString("Missiles: " + missiles.size(), 10, 50);
-        g.drawString("Explodes: " + explodes.size(), 10, 70);
-        g.drawString("Our Tank HP: " + tank.getHp(), 10, 90);
-        g.drawString("Enemies Left: " + enemyTanks.size(), 10, 110);
-        g.drawString("Enemies Killed: " + enemiesKilled.get(), 10, 130);
+    private <T extends GameObject> void drawGameObject(T obj, Graphics g) {
+        if (obj != null && obj.isLive()) {
+            obj.draw(g);
+        }
+    }
 
+    private void triggerEvent() {
         if (enemyTanks.isEmpty()) {
             this.initEnemyTanks();
         }
 
-        for (Missile m : missiles) {
+        missiles.removeIf(m -> !m.isLive());
+        // Use classic loop to prevent CME
+        for (int i = 0; i < missiles.size(); i++) {
+            Missile m = missiles.get(i);
             m.hitTanks(enemyTanks);
             m.hitTank(tank);
             m.hitWalls(walls);
-            m.draw(g);
         }
 
-        for (Explode explode : explodes) explode.draw(g);
+        int prev = enemyTanks.size();
+        enemyTanks.removeIf(e -> !e.isLive());
+        enemiesKilled += (prev - enemyTanks.size());
+        enemyTanks.forEach(e -> {
+            e.actRandomly();
+            e.collidesWithWalls(walls);
+            e.collidesWithTanks(enemyTanks);
+        });
 
-        for (Tank tank : enemyTanks) {
-            tank.collidesWithWalls(walls);
-            tank.collidesWithTanks(enemyTanks);
-            tank.draw(g);
+        if (tank.isDying()) {
+            this.blood.reAppearRandomly();
         }
+        tank.collidesWithWalls(walls);
+        tank.collidesWithTanks(enemyTanks);
+        tank.collidesWithBlood(blood);
 
-        tank.draw(g);
-        // allow our tank to ignore collides rules currently
-        // tank.collidesWithWalls(walls);
-        // tank.collidesWithTanks(enemyTanks);
-        tank.eat(blood);
-        for (Wall wall : walls) wall.draw(g);
-        blood.draw(g);
+        explodes.removeIf(e -> !e.isLive());
     }
 
     private static TankWar INSTANCE;
 
+    /**
+     * Singleton: lazy initial
+     */
     static TankWar getInstance() {
         if (INSTANCE == null)
             INSTANCE = new TankWar();

@@ -1,10 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 
-class Explode {
+class Explode extends GameObject {
 
-    private int x, y;
-    private int step = 0;
+    private int step;
 
     private static final Image[] IMAGES = new Image[11];
     static {
@@ -18,20 +17,23 @@ class Explode {
         this.y = y;
     }
 
+    @Override
     void draw(Graphics g) {
         // display 10 images continuously to simulate animation effect, thus will end after last frame
         boolean live = step < IMAGES.length;
         if (!live) {
-            TankWar.getInstance().removeExplode(this);
-            step = 0;
             return;
         }
 
-        g.drawImage(IMAGES[step], x, y, null);
-        if (step == 0) {
+        g.drawImage(IMAGES[step++], x, y, null);
+        if (step == 1) {
             Tools.playAudio("explode.wav");
         }
-        step++;
+    }
+
+    @Override
+    Rectangle getRectangle() {
+        return new Rectangle(x, y, IMAGES[step].getWidth(null), IMAGES[step].getHeight(null));
     }
 
 }

@@ -1,8 +1,8 @@
 import java.awt.*;
 
-class Wall {
+class Wall extends GameObject {
 
-    private final int x, y, w, h;
+    private final int w, h;
 
     Wall(int x, int y, int w, int h) {
         this.x = x;
@@ -11,6 +11,12 @@ class Wall {
         this.h = h;
     }
 
+    @Override
+    void setLive(boolean live) {
+        throw new UnsupportedOperationException("Hey dude, how dare you set a wall to dead?");
+    }
+
+    @Override
     void draw(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.DARK_GRAY);
@@ -18,6 +24,7 @@ class Wall {
         g.setColor(c);
     }
 
+    @Override
     Rectangle getRectangle() {
         return new Rectangle(x, y, w, h);
     }

@@ -1,50 +1,39 @@
+import javax.swing.*;
 import java.awt.*;
 
-class Blood {
-    private int x, y;
-    private final int w, h;
+class Blood extends GameObject {
+    private int step;
 
-    private int step = 0;
-
-    private boolean live = true;
-
-    boolean isLive() {
-        return live;
-    }
-
+    /**
+     * When player tank's hp is lower than threshold, re-appear with 66.7% possibility
+     */
     void reAppearRandomly() {
-        this.live = Tools.nextInt(4) == 2;
-    }
-
-    void disappear() {
-        this.live = false;
+        this.setLive(Tools.nextInt(4) < 3);
     }
 
     private final int[][] points = {
         {350, 300}, {360, 300}, {375, 275}, {400, 200}, {360, 270}, {365, 290}, {340, 280}
     };
 
+    private final Image image;
+
     Blood() {
         this.x = points[0][0];
         this.y = points[0][1];
-        w = h = 15;
+        this.image = new ImageIcon(this.getClass().getResource("images/blood.png")).getImage();
     }
 
+    @Override
     void draw(Graphics g) {
-        if (!live) return;
-
-        Color c = g.getColor();
-        g.setColor(Color.MAGENTA);
-        g.fillRect(x, y, w, h);
-        g.setColor(c);
-
+        g.drawImage(image, x, y, null);
         step++;
         step %= points.length;
         x = points[step][0];
         y = points[step][1];
     }
 
+    @Override
     Rectangle getRectangle() {
-        return new Rectangle(x, y, w, h);
+        return new Rectangle(x, y, image.getWidth(null), image.getHeight(null));
     }
 }

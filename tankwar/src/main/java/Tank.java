@@ -3,7 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 
-class Tank implements KeyListener {
+class Tank extends GameObject implements KeyListener {
     /**
      * width of tank in current direction, using {@link Direction#Down} as initial value
      */
@@ -23,11 +23,7 @@ class Tank implements KeyListener {
 
     static final String OBJECT_TYPE = Tank.class.getName().toLowerCase();
 
-    private int x, y;
-
     private int hp = MAX_HP;
-
-    private boolean live = true;
 
     private Direction direction;
 
@@ -62,13 +58,9 @@ class Tank implements KeyListener {
         this.hp = hp;
     }
 
-    boolean isLive() {
-        return this.live;
-    }
-
     void setLive(boolean live) {
-        this.live = live;
-        if (!this.live && !this.enemy) {
+        super.setLive(live);
+        if (!this.isLive() && !this.enemy) {
             Tools.playAudio("death.mp3");
         }
     }
@@ -81,15 +73,8 @@ class Tank implements KeyListener {
         return this.enemy;
     }
 
+    @Override
     void draw(Graphics g) {
-        if (!live) {
-            if (enemy) TankWar.getInstance().removeEnemyTank(this);
-            return;
-        } else if (!enemy && this.isDying()) {
-            TankWar.getInstance().getBlood().reAppearRandomly();
-        }
-
-        Color color = g.getColor();
         Image img = this.pointDirection.get(OBJECT_TYPE);
         width = img.getWidth(null);
         height = img.getHeight(null);
@@ -99,7 +84,6 @@ class Tank implements KeyListener {
             g.drawRect(x, y - BLOOD_BAR_HEIGHT, width, BLOOD_BAR_HEIGHT);
             int availableHPWidth = width * hp / MAX_HP;
             g.fillRect(x, y - BLOOD_BAR_HEIGHT, availableHPWidth, BLOOD_BAR_HEIGHT);
-            g.setColor(color);
         }
 
         g.drawImage(img, x, y, null);
@@ -109,21 +93,24 @@ class Tank implements KeyListener {
             this.pointDirection = this.direction;
             this.checkBound();
         }
-
-        this.actRandomly();
     }
+
+    private static final int BORDER_DELTA_X = 15, BORDER_DELTA_Y = 25;
 
     private void checkBound() {
         if (x < 0) x = 0;
-        if (y < height) y = height;
-        if (x > TankWar.WIDTH - width) x = TankWar.WIDTH - width;
-        if (y > TankWar.HEIGHT - height) y = TankWar.HEIGHT - height;
+        if (x > TankWar.WIDTH - width - BORDER_DELTA_X) {
+            x = TankWar.WIDTH - width - BORDER_DELTA_X;
+        }
+
+        int minY = enemy ? 0 : BLOOD_BAR_HEIGHT;
+        if (y < minY) y = minY;
+        if (y > TankWar.HEIGHT - height - minY - BORDER_DELTA_Y) {
+            y = TankWar.HEIGHT - height - minY - BORDER_DELTA_Y;
+        }
     }
 
-    private void actRandomly() {
-        // Our tank is under control, just randomly control enemies
-        if (!enemy) return;
-
+    void actRandomly() {
         Direction[] dirs = Direction.values();
         if (step == 0) {
             step = Tools.nextInt(12) + 3;
@@ -201,7 +188,7 @@ class Tank implements KeyListener {
     }
 
     private void fire(Direction dir) {
-        if (!live) return;
+        if (!this.isLive()) return;
         int x = this.x + width / 2 - Missile.WIDTH / 2;
         int y = this.y + height / 2 - Missile.HEIGHT / 2;
         Missile m = new Missile(x, y, enemy, dir);
@@ -220,20 +207,22 @@ class Tank implements KeyListener {
         else if (!bL && !bU) direction = null;
     }
 
+    @Override
     Rectangle getRectangle() {
         return new Rectangle(x, y, width, height);
     }
 
-    void eat(Blood blood) {
-        if (this.live && blood.isLive() && this.getRectangle().intersects(blood.getRectangle())) {
+    void collidesWithBlood(Blood blood) {
+        if (!this.enemy && this.isLive() && blood.isLive() && this.getRectangle().intersects(blood.getRectangle())) {
             this.hp = MAX_HP;
-            blood.disappear();
+            Tools.playAudio("revive.wav");
+            blood.setLive(false);
         }
     }
 
-    void collidesWithWalls(Wall[] walls) {
+    void collidesWithWalls(List<Wall> walls) {
         for (Wall wall : walls) {
-            if (this.live && this.getRectangle().intersects(wall.getRectangle())) {
+            if (this.isLive() && this.getRectangle().intersects(wall.getRectangle())) {
                 this.turnAround();
                 break;
             }
@@ -244,7 +233,7 @@ class Tank implements KeyListener {
         for (Tank t : tanks) {
             if (this == t) continue;
 
-            if (this.live && t.isLive() && this.getRectangle().intersects(t.getRectangle())) {
+            if (this.isLive() && t.isLive() && this.getRectangle().intersects(t.getRectangle())) {
                 this.turnAround();
                 t.turnAround();
                 return;
