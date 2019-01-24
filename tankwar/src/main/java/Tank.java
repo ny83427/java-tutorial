@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -84,6 +85,9 @@ class Tank extends GameObject implements KeyListener {
             g.drawRect(x, y - BLOOD_BAR_HEIGHT, width, BLOOD_BAR_HEIGHT);
             int availableHPWidth = width * hp / MAX_HP;
             g.fillRect(x, y - BLOOD_BAR_HEIGHT, availableHPWidth, BLOOD_BAR_HEIGHT);
+
+            Image pet = new ImageIcon(this.getClass().getResource("images/pet-camel.gif")).getImage();
+            g.drawImage(pet, x - pet.getWidth(null) - 5, y, null);
         }
 
         g.drawImage(img, x, y, null);
@@ -135,7 +139,7 @@ class Tank extends GameObject implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_SPACE) {
-            TankWar.getInstance().start();
+            TankWar.getInstance().startGame();
         } else if (key == KeyEvent.VK_F2) {
             if (!this.isLive()) {
                 this.setLive(true);
@@ -234,7 +238,10 @@ class Tank extends GameObject implements KeyListener {
             if (this == t) continue;
 
             if (this.isLive() && t.isLive() && this.getRectangle().intersects(t.getRectangle())) {
-                this.turnAround();
+                if (this.enemy) {
+                    // enemy tank will turn back while player tank will wait for control
+                    this.turnAround();
+                }
                 t.turnAround();
                 return;
             }

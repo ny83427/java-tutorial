@@ -28,9 +28,10 @@ class TankWar extends JComponent {
 
     private TankWar() {
         this.walls = Arrays.asList(
-            new Wall(250, 100, 300, 20),
-            new Wall(100, 200, 20, 150),
-            new Wall(680, 200, 20, 150)
+            new Wall(250, 100, 300, 28),
+            new Wall(100, 200, 28, 280),
+            new Wall(680, 200, 28, 280),
+            new Wall(250, 520, 300, 28)
         );
         this.init();
     }
@@ -74,6 +75,14 @@ class TankWar extends JComponent {
         this.enemiesKilled = 0;
         this.init();
         this.start();
+    }
+
+    private boolean startBtnPressed = false;
+
+    void startGame() {
+        if (startBtnPressed) return;
+        start();
+        startBtnPressed = true;
     }
 
     void start() {
@@ -121,6 +130,10 @@ class TankWar extends JComponent {
             g.drawString("Enemies Left: " + enemyTanks.size(), 10, 110);
             g.drawString("Enemies Killed: " + enemiesKilled, 10, 130);
 
+            Image tree = new ImageIcon(this.getClass().getResource("images/tree.png")).getImage();
+            g.drawImage(tree, 12, HEIGHT - tree.getHeight(null) - 40, null);
+            g.drawImage(tree, WIDTH - tree.getWidth(null) - 20, 12, null);
+
             this.drawGameObjects(missiles, g);
             this.drawGameObjects(explodes, g);
             this.drawGameObjects(explodes, g);
@@ -160,14 +173,17 @@ class TankWar extends JComponent {
             m.hitWalls(walls);
         }
 
-        int prev = enemyTanks.size();
-        enemyTanks.removeIf(e -> !e.isLive());
-        enemiesKilled += (prev - enemyTanks.size());
-        enemyTanks.forEach(e -> {
-            e.actRandomly();
-            e.collidesWithWalls(walls);
-            e.collidesWithTanks(enemyTanks);
-        });
+        for (int i = 0; i < enemyTanks.size(); i++) {
+            Tank et = enemyTanks.get(i);
+            if (!et.isLive()) {
+                enemyTanks.remove(i);
+                enemiesKilled++;
+                continue;
+            }
+            et.actRandomly();
+            et.collidesWithWalls(walls);
+            et.collidesWithTanks(enemyTanks);
+        }
 
         if (tank.isDying()) {
             this.blood.reAppearRandomly();
