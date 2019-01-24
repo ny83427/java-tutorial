@@ -1,14 +1,22 @@
+import javax.swing.*;
 import java.awt.*;
 
 class Wall extends GameObject {
+    private final Image image;
 
-    private final int w, h;
+    private final boolean horizontal;
+    private final int brickCount;
 
     Wall(int x, int y, int w, int h) {
         this.x = x;
         this.y = y;
-        this.w = w;
-        this.h = h;
+        this.image = new ImageIcon(this.getClass().getResource("images/brick.png")).getImage();
+        this.horizontal = w > this.image.getWidth(null);
+        if (this.horizontal) {
+            this.brickCount = w / this.image.getWidth(null);
+        } else {
+            this.brickCount = h / this.image.getHeight(null);
+        }
     }
 
     @Override
@@ -18,14 +26,18 @@ class Wall extends GameObject {
 
     @Override
     void draw(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(x, y, w, h);
-        g.setColor(c);
+        for (int i = 0; i < brickCount; i++) {
+            int deltaX = horizontal ? i * image.getWidth(null) : 0;
+            int deltaY = horizontal ? 0 : i * image.getHeight(null);
+            g.drawImage(image, x + deltaX, y + deltaY, null);
+        }
     }
 
     @Override
     Rectangle getRectangle() {
-        return new Rectangle(x, y, w, h);
+        if (horizontal)
+            return new Rectangle(x, y, brickCount * image.getWidth(null), image.getHeight(null));
+        else
+            return new Rectangle(x, y, image.getWidth(null), brickCount * image.getHeight(null));
     }
 }
