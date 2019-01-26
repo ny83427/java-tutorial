@@ -1,3 +1,7 @@
+/*
+* This is a personal academic project. Dear PVS-Studio, please check it.
+* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+*/
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -108,7 +112,7 @@ public class NumberGame {
      * Time complexity O(n^3), which can be improved to O(n^2 * log(n))
      */
     static List<int[]> threeSumsBruteForce(int[] nums) {
-        if (nums == null || nums.length < 3) return null;
+        if (nums == null || nums.length < 3) return new ArrayList<>(0);
 
         List<int[]> list = new ArrayList<>();
         for (int i = 0; i < nums.length - 2; i++) {
@@ -128,7 +132,7 @@ public class NumberGame {
      * Time complexity O(n^2 * log(n)), certain tips such as early exit will also help
      */
     static List<int[]> threeSums(int[] nums) {
-        if (nums == null || nums.length < 3) return null;
+        if (nums == null || nums.length < 3) return new ArrayList<>(0);
 
         List<int[]> list = new ArrayList<>();
         // Keep track of each indexes, once they are found their status will change
@@ -160,7 +164,7 @@ public class NumberGame {
      * </pre>
      */
     static List<int[]> uniqueThreeSums(int[] nums) {
-        if (nums == null || nums.length < 3) return null;
+        if (nums == null || nums.length < 3) return new ArrayList<>(0);
 
         List<int[]> list = new ArrayList<>();
         Arrays.sort(nums);
