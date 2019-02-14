@@ -140,7 +140,6 @@ class TankWar extends JComponent {
 
             this.drawGameObjects(missiles, g);
             this.drawGameObjects(explodes, g);
-            this.drawGameObjects(explodes, g);
             this.drawGameObjects(enemyTanks, g);
             this.drawGameObjects(walls, g);
 
