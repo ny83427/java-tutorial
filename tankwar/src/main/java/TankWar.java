@@ -40,6 +40,14 @@ class TankWar extends JComponent {
         this.init();
     }
 
+    List<Tank> getEnemyTanks() {
+        return enemyTanks;
+    }
+
+    List<Wall> getWalls() {
+        return walls;
+    }
+
     private void init() {
         this.tank = new Tank(WIDTH / 2, 50);
         this.tank.initDirection(Direction.Down);

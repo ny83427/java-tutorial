@@ -32,7 +32,7 @@ class Tank extends GameObject implements KeyListener {
 
     private Direction direction;
 
-    private Direction pointDirection = Direction.Down;
+    private Direction previousDirection = Direction.Down;
 
     private final boolean enemy;
 
@@ -47,10 +47,9 @@ class Tank extends GameObject implements KeyListener {
     }
 
     void initDirection(Direction direction) {
-        this.direction = direction;
-        this.pointDirection = direction;
+        this.previousDirection = this.direction = direction;
 
-        Image img = this.pointDirection.get(OBJECT_TYPE);
+        Image img = this.previousDirection.get(OBJECT_TYPE);
         width = img.getWidth(null);
         height = img.getHeight(null);
     }
@@ -80,7 +79,8 @@ class Tank extends GameObject implements KeyListener {
 
     @Override
     void draw(Graphics g) {
-        Image img = this.pointDirection.get(OBJECT_TYPE);
+        // direction is possible to be null when Tank stops moving
+        Image img = this.previousDirection.get(OBJECT_TYPE);
         width = img.getWidth(null);
         height = img.getHeight(null);
         // display blood bar for the tank player can control
@@ -96,9 +96,16 @@ class Tank extends GameObject implements KeyListener {
 
         g.drawImage(img, x, y, null);
         if (this.direction != null) {
+            int oldX = x, oldY = y;
             x = x + this.direction.xFactor * SPEED;
             y = y + this.direction.yFactor * SPEED;
-            this.pointDirection = this.direction;
+            // Cannot proceed further if meets walls or other tanks
+            if (this.collidedWithWalls(TankWar.getInstance().getWalls()) ||
+                this.collidedWithTanks(TankWar.getInstance().getEnemyTanks())) {
+                this.x = oldX;
+                this.y = oldY;
+            }
+            this.previousDirection = this.direction;
             this.checkBound();
         }
     }
@@ -123,7 +130,7 @@ class Tank extends GameObject implements KeyListener {
         if (step == 0) {
             step = Tools.nextInt(12) + 3;
             int rn = Tools.nextInt(dirs.length);
-            pointDirection = direction = dirs[rn];
+            previousDirection = direction = dirs[rn];
             if (Tools.nextBoolean())
                 this.fire();
         }
@@ -183,7 +190,7 @@ class Tank extends GameObject implements KeyListener {
 
     private void fire() {
         Tools.playAudio("shoot.wav");
-        this.fire(pointDirection);
+        this.fire(previousDirection);
     }
 
     private void superFire() {
@@ -229,46 +236,29 @@ class Tank extends GameObject implements KeyListener {
     }
 
     void collidesWithWalls(List<Wall> walls) {
-        for (Wall wall : walls) {
-            if (this.isLive() && this.getRectangle().intersects(wall.getRectangle())) {
-                this.turnAround();
-                break;
-            }
-        }
+        if (this.collidedWithWalls(walls))
+            this.direction = null;
+    }
+
+    private boolean collidedWithWalls(List<Wall> walls) {
+        for (Wall wall : walls)
+            if (this.isLive() && this.getRectangle().intersects(wall.getRectangle()))
+                return true;
+        return false;
     }
 
     void collidesWithTanks(List<Tank> tanks) {
-        for (Tank t : tanks) {
-            if (this == t) continue;
-
-            if (this.isLive() && t.isLive() && this.getRectangle().intersects(t.getRectangle())) {
-                if (this.enemy) {
-                    // enemy tank will turn back while player tank will wait for control
-                    this.turnAround();
-                }
-                t.turnAround();
-                return;
-            }
-        }
+        if (this.collidedWithTanks(tanks))
+            this.direction = null;
     }
 
-    private void turnAround() {
-        if (this.direction == null) return;
-
-        if (direction == Direction.Up || direction == Direction.LeftUp || direction == Direction.RightUp) {
-            direction = Direction.Down;
-        } else if (direction == Direction.Down || direction == Direction.LeftDown || direction == Direction.RightDown) {
-            direction = Direction.Up;
-        } else if (direction == Direction.Left) {
-            direction = Direction.Right;
-        } else {
-            direction = Direction.Left;
+    private boolean collidedWithTanks(List<Tank> tanks) {
+        for (int i = 0; i < tanks.size(); i++) {
+            Tank t = tanks.get(i);
+            if (this != t && this.isLive() && t.isLive() && this.getRectangle().intersects(t.getRectangle()))
+                return true;
         }
-
-        x += Tools.nextInt(11);
-        y += Tools.nextInt(11);
-        if (x >= TankWar.WIDTH * 3 / 4) x = Tools.nextInt(TankWar.WIDTH / 2);
-        if (y >= TankWar.HEIGHT * 3 / 4) y = Tools.nextInt(TankWar.HEIGHT - height * 2);
-        this.checkBound();
+        return false;
     }
+
 }
