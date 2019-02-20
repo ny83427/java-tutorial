@@ -175,10 +175,13 @@ class TankWar extends JComponent {
             this.initEnemyTanks();
         }
 
-        missiles.removeIf(m -> !m.isLive());
         // Use classic loop to prevent CME
         for (int i = 0; i < missiles.size(); i++) {
             Missile m = missiles.get(i);
+            if (!m.isLive()) {
+                missiles.remove(i);
+                continue;
+            }
             m.hitTanks(enemyTanks);
             m.hitTank(tank);
             m.hitWalls(walls);
@@ -193,6 +196,7 @@ class TankWar extends JComponent {
             }
             et.actRandomly();
             et.collidesWithWalls(walls);
+            et.collidesWithTank(tank);
             et.collidesWithTanks(enemyTanks);
         }
 

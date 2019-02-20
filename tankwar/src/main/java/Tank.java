@@ -146,6 +146,15 @@ class Tank extends GameObject implements KeyListener {
 
     private boolean bL, bR, bU, bD;
 
+    /**
+     * Cheating Mode: Player tank iron skin or not?
+     */
+    private boolean ironSkin;
+
+    boolean isIronSkin() {
+        return this.ironSkin;
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -165,6 +174,10 @@ class Tank extends GameObject implements KeyListener {
             bR = true;
         } else if (key == KeyEvent.VK_DOWN) {
             bD = true;
+        } else if (key == KeyEvent.VK_F11) {
+            ironSkin = !this.enemy && !ironSkin;
+            if (ironSkin)
+                System.out.println("CHEATING: Player Tank in Iron Skin Mode!");
         }
         this.determineDirection();
     }
@@ -253,12 +266,18 @@ class Tank extends GameObject implements KeyListener {
     }
 
     private boolean collidedWithTanks(List<Tank> tanks) {
-        for (int i = 0; i < tanks.size(); i++) {
-            Tank t = tanks.get(i);
-            if (this != t && this.isLive() && t.isLive() && this.getRectangle().intersects(t.getRectangle()))
+        for (int i = 0; i < tanks.size(); i++)
+            if (this.collidedWithTank(tanks.get(i)))
                 return true;
-        }
         return false;
     }
 
+    private boolean collidedWithTank(Tank t) {
+        return this != t && this.isLive() && t.isLive() && this.getRectangle().intersects(t.getRectangle());
+    }
+
+    void collidesWithTank(Tank t) {
+        if (this.collidedWithTank(t))
+            this.direction = null;
+    }
 }

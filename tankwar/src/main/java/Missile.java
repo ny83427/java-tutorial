@@ -47,9 +47,11 @@ class Missile extends GameObject {
         if (this.isLive() && this.getRectangle().intersects(tank.getRectangle()) &&
             tank.isLive() && this.enemy != tank.isEnemy()) {
             if (!tank.isEnemy()) {
-                tank.setHp(tank.getHp() - LETHALITY);
-                if (tank.getHp() <= 0) {
-                    tank.setLive(false);
+                if (!tank.isIronSkin()) {
+                    tank.setHp(tank.getHp() - LETHALITY);
+                    if (tank.getHp() <= 0) {
+                        tank.setLive(false);
+                    }
                 }
             } else {
                 tank.setLive(false);
