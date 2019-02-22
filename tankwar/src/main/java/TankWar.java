@@ -1,12 +1,9 @@
-/*
-* This is a personal academic project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 import javafx.application.Platform;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,23 +26,16 @@ class TankWar extends JComponent {
     private List<Explode> explodes;
     private final List<Wall> walls;
     private int enemiesKilled;
+    private boolean petCried;
 
     private TankWar() {
         this.walls = Arrays.asList(
             new Wall(250, 100, 300, 28),
             new Wall(100, 200, 28, 280),
-            new Wall(680, 200, 28, 280),
+            new Wall(670, 200, 28, 280),
             new Wall(250, 520, 300, 28)
         );
         this.init();
-    }
-
-    List<Tank> getEnemyTanks() {
-        return enemyTanks;
-    }
-
-    List<Wall> getWalls() {
-        return walls;
     }
 
     private void init() {
@@ -56,13 +46,23 @@ class TankWar extends JComponent {
         this.missiles = new ArrayList<>();
         this.explodes = new ArrayList<>();
         this.blood = new Blood();
-        // Attention! As game can restart again and gain, key listener would be accumulated again and again
-        // As a result, previous listeners must be removed before add current tank
-        KeyListener[] listeners = this.getKeyListeners();
-        for (KeyListener keyListener : listeners) {
-            this.removeKeyListener(keyListener);
+        this.petCried = false;
+    }
+
+    boolean isCollidedWith(Tank t) {
+        for (Wall wall : walls) {
+            if (t.isCollidedWith(wall)) {
+                return true;
+            }
         }
-        this.addKeyListener(this.tank);
+
+        for (int i = 0; i < enemyTanks.size(); i++) {
+            if (t.isCollidedWith(enemyTanks.get(i))) {
+                return true;
+            }
+        }
+
+        return t.isCollidedWith(tank);
     }
 
     void addMissile(Missile missile) {
@@ -76,7 +76,9 @@ class TankWar extends JComponent {
     private void initEnemyTanks() {
         for (int i = 0; i < INIT_ENEMY_TANK_ROWS; i++) {
             for (int j = 0; j < INIT_ENEMY_TANK_COUNT / INIT_ENEMY_TANK_ROWS; j++) {
-                Tank tank = new Tank(100 + 100 * (j + 1), 300 + i * 50, true);
+                int x = 100 + 110 * (j + 1);
+                int y = 300 + i * 50;
+                Tank tank = new Tank(x, y, true);
                 tank.initDirection(Direction.Up);
                 this.enemyTanks.add(tank);
             }
@@ -86,22 +88,21 @@ class TankWar extends JComponent {
     void restart() {
         this.enemiesKilled = 0;
         this.init();
-        this.start();
     }
 
-    private boolean startBtnPressed = false;
+    private boolean started;
 
     void startGame() {
-        if (startBtnPressed) return;
+        if (started) return;
         start();
-        startBtnPressed = true;
+        started = true;
     }
 
     private void start() {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                while (tank.isLive()) {
+                while (true) {
                     try {
                         repaint();
                         triggerEvent();
@@ -110,9 +111,6 @@ class TankWar extends JComponent {
                         e.printStackTrace();
                     }
                 }
-                // once for "Game Over" rendering
-                repaint();
-                return null;
             }
         }.execute();
     }
@@ -171,6 +169,8 @@ class TankWar extends JComponent {
     }
 
     private void triggerEvent() {
+        if (!tank.isLive()) return;
+
         if (enemyTanks.isEmpty()) {
             this.initEnemyTanks();
         }
@@ -195,17 +195,28 @@ class TankWar extends JComponent {
                 continue;
             }
             et.actRandomly();
-            et.collidesWithWalls(walls);
-            et.collidesWithTank(tank);
-            et.collidesWithTanks(enemyTanks);
+            if (this.isCollidedWith(et)) {
+                et.stop();
+            }
         }
 
         if (tank.isDying()) {
-            this.blood.reAppearRandomly();
+            // Your loyal pet would probably cry for you, dude
+            if (Tools.nextInt(10) < 2 && !petCried) {
+                Tools.playAudio("camel.mp3");
+                petCried = true;
+            }
+            this.blood.setLive(Tools.nextInt(4) < 3);
         }
-        tank.collidesWithWalls(walls);
-        tank.collidesWithTanks(enemyTanks);
-        tank.collidesWithBlood(blood);
+
+        if (this.isCollidedWith(tank))
+            tank.stop();
+
+        if (tank.isCollidedWith(blood)) {
+            tank.revive();
+            Tools.playAudio("revive.wav");
+            blood.setLive(false);
+        }
 
         explodes.removeIf(e -> !e.isLive());
     }
@@ -227,14 +238,27 @@ class TankWar extends JComponent {
         JFrame frame = new JFrame("The Most Boring Tank War Game");
         frame.setIconImage(new ImageIcon(TankWar.class.getResource("/icon.png")).getImage());
         frame.setSize(WIDTH, HEIGHT);
-        frame.setLocation(400, 100);
+        int locationY = (GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height - frame.getHeight()) / 2;
+        if (locationY < 0) {
+            locationY = 0;
+        }
+        frame.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - frame.getWidth()) / 2, locationY);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
         TankWar tankWar = TankWar.getInstance();
         frame.add(tankWar);
-        // KeyListeners need to be on the focused component to work
-        tankWar.setFocusable(true);
+        frame.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                tankWar.tank.keyPressed(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                tankWar.tank.keyReleased(e);
+            }
+        });
         frame.setVisible(true);
     }
 

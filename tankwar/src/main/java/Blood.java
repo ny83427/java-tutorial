@@ -1,22 +1,11 @@
-/*
-* This is a personal academic project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 import javax.swing.*;
 import java.awt.*;
 
 class Blood extends GameObject {
     private int step;
 
-    /**
-     * When player tank's hp is lower than threshold, re-appear with 66.7% possibility
-     */
-    void reAppearRandomly() {
-        this.setLive(Tools.nextInt(4) < 3);
-    }
-
     private final int[][] points = {
-        {350, 300}, {360, 300}, {375, 275}, {400, 200}, {360, 270}, {365, 290}, {340, 280}
+        {380, 260}, {360, 300}, {375, 275}, {400, 200}, {360, 270}, {365, 290}, {340, 280}
     };
 
     private final Image image;

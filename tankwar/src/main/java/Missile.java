@@ -1,7 +1,3 @@
-/*
-* This is a personal academic project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 import java.awt.*;
 import java.util.List;
 
@@ -44,8 +40,7 @@ class Missile extends GameObject {
     private static final int LETHALITY = 20;
 
     boolean hitTank(Tank tank) {
-        if (this.isLive() && this.getRectangle().intersects(tank.getRectangle()) &&
-            tank.isLive() && this.enemy != tank.isEnemy()) {
+        if (this.isCollidedWith(tank) && this.enemy != tank.isEnemy()) {
             if (!tank.isEnemy()) {
                 if (!tank.isIronSkin()) {
                     tank.setHp(tank.getHp() - LETHALITY);
@@ -68,15 +63,14 @@ class Missile extends GameObject {
     void hitTanks(List<Tank> tanks) {
         for (Tank tank : tanks) {
             if (hitTank(tank)) {
-                return;
+                break;
             }
         }
     }
 
     void hitWalls(List<Wall> walls) {
         for (Wall wall : walls) {
-            boolean hit = this.isLive() && this.getRectangle().intersects(wall.getRectangle());
-            if (hit) {
+            if (this.isCollidedWith(wall)) {
                 this.setLive(false);
                 break;
             }

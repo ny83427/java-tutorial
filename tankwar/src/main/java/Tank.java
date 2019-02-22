@@ -1,22 +1,15 @@
-/*
-* This is a personal academic project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.List;
 
-class Tank extends GameObject implements KeyListener {
+class Tank extends GameObject {
     /**
-     * width of tank in current direction, using {@link Direction#Down} as initial value
+     * It would be better if width and height are retrieved from image of current direction.
+     * However, due to asset not prepared well accordingly, they are different and would
+     * result in player tank cannot move sometimes, this is a simply workaround to avoid
+     * complex handling when collision happens
      */
-    private int width = 35;
-    /**
-     * height of tank in current direction, using {@link Direction#Down} as initial value
-     */
-    private int height = 34;
+    private static final int WIDTH = 44, HEIGHT = 44;
 
     private static final int SPEED = 5;
 
@@ -32,9 +25,21 @@ class Tank extends GameObject implements KeyListener {
 
     private Direction direction;
 
+    void stop() {
+        this.direction = null;
+    }
+
+    Direction direction() {
+        return direction;
+    }
+
     private Direction previousDirection = Direction.Down;
 
     private final boolean enemy;
+
+    private Image pet;
+
+    private int petWidth;
 
     Tank(int x, int y) {
         this(x, y, false);
@@ -44,14 +49,15 @@ class Tank extends GameObject implements KeyListener {
         this.x = x;
         this.y = y;
         this.enemy = enemy;
+        if (!enemy) {
+            pet = new ImageIcon(this.getClass().getResource("images/pet-camel.gif")).getImage();
+            petWidth = pet.getWidth(null);
+        }
     }
 
     void initDirection(Direction direction) {
-        this.previousDirection = this.direction = direction;
-
-        Image img = this.previousDirection.get(OBJECT_TYPE);
-        width = img.getWidth(null);
-        height = img.getHeight(null);
+        this.direction = direction;
+        this.previousDirection = direction;
     }
 
     int getHp() {
@@ -60,6 +66,10 @@ class Tank extends GameObject implements KeyListener {
 
     void setHp(int hp) {
         this.hp = hp;
+    }
+
+    void revive() {
+        this.hp = MAX_HP;
     }
 
     void setLive(boolean live) {
@@ -79,19 +89,15 @@ class Tank extends GameObject implements KeyListener {
 
     @Override
     void draw(Graphics g) {
-        // direction is possible to be null when Tank stops moving
-        Image img = this.previousDirection.get(OBJECT_TYPE);
-        width = img.getWidth(null);
-        height = img.getHeight(null);
+        Image img = previousDirection.get(OBJECT_TYPE);
+        int width = img.getWidth(null);
         // display blood bar for the tank player can control
         if (!enemy) {
             g.setColor(Color.RED);
             g.drawRect(x, y - BLOOD_BAR_HEIGHT, width, BLOOD_BAR_HEIGHT);
             int availableHPWidth = width * hp / MAX_HP;
             g.fillRect(x, y - BLOOD_BAR_HEIGHT, availableHPWidth, BLOOD_BAR_HEIGHT);
-
-            Image pet = new ImageIcon(this.getClass().getResource("images/pet-camel.gif")).getImage();
-            g.drawImage(pet, x - pet.getWidth(null) - 5, y, null);
+            g.drawImage(pet, x - petWidth - 5, y, null);
         }
 
         g.drawImage(img, x, y, null);
@@ -100,8 +106,7 @@ class Tank extends GameObject implements KeyListener {
             x = x + this.direction.xFactor * SPEED;
             y = y + this.direction.yFactor * SPEED;
             // Cannot proceed further if meets walls or other tanks
-            if (this.collidedWithWalls(TankWar.getInstance().getWalls()) ||
-                this.collidedWithTanks(TankWar.getInstance().getEnemyTanks())) {
+            if (TankWar.getInstance().isCollidedWith(this)) {
                 this.x = oldX;
                 this.y = oldY;
             }
@@ -113,15 +118,16 @@ class Tank extends GameObject implements KeyListener {
     private static final int BORDER_DELTA_X = 15, BORDER_DELTA_Y = 25;
 
     private void checkBound() {
-        if (x < 0) x = 0;
-        if (x > TankWar.WIDTH - width - BORDER_DELTA_X) {
-            x = TankWar.WIDTH - width - BORDER_DELTA_X;
+        int minX = enemy ? 0 : (petWidth + 5);
+        if (x < minX) x = minX;
+        if (x > TankWar.WIDTH - WIDTH - BORDER_DELTA_X) {
+            x = TankWar.WIDTH - WIDTH - BORDER_DELTA_X;
         }
 
         int minY = enemy ? 0 : BLOOD_BAR_HEIGHT;
         if (y < minY) y = minY;
-        if (y > TankWar.HEIGHT - height - minY - BORDER_DELTA_Y) {
-            y = TankWar.HEIGHT - height - minY - BORDER_DELTA_Y;
+        if (y > TankWar.HEIGHT - HEIGHT - minY - BORDER_DELTA_Y) {
+            y = TankWar.HEIGHT - HEIGHT - minY - BORDER_DELTA_Y;
         }
     }
 
@@ -130,7 +136,8 @@ class Tank extends GameObject implements KeyListener {
         if (step == 0) {
             step = Tools.nextInt(12) + 3;
             int rn = Tools.nextInt(dirs.length);
-            previousDirection = direction = dirs[rn];
+            direction = dirs[rn];
+            previousDirection = dirs[rn];
             if (Tools.nextBoolean())
                 this.fire();
         }
@@ -139,12 +146,7 @@ class Tank extends GameObject implements KeyListener {
 
     private int step = Tools.nextInt(12) + 3;
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // -> Ignore
-    }
-
-    private boolean bL, bR, bU, bD;
+    private int dirCode;
 
     /**
      * Cheating Mode: Player tank iron skin or not?
@@ -155,8 +157,7 @@ class Tank extends GameObject implements KeyListener {
         return this.ironSkin;
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
+    void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_SPACE) {
             TankWar.getInstance().startGame();
@@ -167,36 +168,37 @@ class Tank extends GameObject implements KeyListener {
                 TankWar.getInstance().restart();
             }
         } else if (key == KeyEvent.VK_LEFT) {
-            bL = true;
+            dirCode |= Direction.Left.code;
         } else if (key == KeyEvent.VK_UP) {
-            bU = true;
+            dirCode |= Direction.Up.code;
         } else if (key == KeyEvent.VK_RIGHT) {
-            bR = true;
+            dirCode |= Direction.Right.code;
         } else if (key == KeyEvent.VK_DOWN) {
-            bD = true;
+            dirCode |= Direction.Down.code;
         } else if (key == KeyEvent.VK_F11) {
             ironSkin = !this.enemy && !ironSkin;
             if (ironSkin)
-                System.out.println("CHEATING: Player Tank in Iron Skin Mode!");
+                System.err.println("CHEATING: Player Tank in Iron Skin Mode!");
+            else
+                System.out.println("Player Tank switched to normal mode.");
         }
         this.determineDirection();
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
+    void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_CONTROL) {
             fire();
         } else if (key == KeyEvent.VK_A) {
             superFire();
         } else if (key == KeyEvent.VK_LEFT) {
-            bL = false;
+            dirCode ^= Direction.Left.code;
         } else if (key == KeyEvent.VK_UP) {
-            bU = false;
+            dirCode ^= Direction.Up.code;
         } else if (key == KeyEvent.VK_RIGHT) {
-            bR = false;
+            dirCode ^= Direction.Right.code;
         } else if (key == KeyEvent.VK_DOWN) {
-            bD = false;
+            dirCode ^= Direction.Down.code;
         }
         this.determineDirection();
     }
@@ -208,76 +210,26 @@ class Tank extends GameObject implements KeyListener {
 
     private void superFire() {
         Tools.playAudio(Tools.nextBoolean() ? "supershoot.wav" : "supershoot.aiff");
-
-        Direction[] dirs = Direction.values();
-        for (Direction dir : dirs) {
+        for (Direction dir : Direction.values()) {
             this.fire(dir);
         }
     }
 
     private void fire(Direction dir) {
         if (!this.isLive()) return;
-        int x = this.x + width / 2 - Missile.WIDTH / 2;
-        int y = this.y + height / 2 - Missile.HEIGHT / 2;
+        int x = this.x + WIDTH / 2 - Missile.WIDTH / 2;
+        int y = this.y + HEIGHT / 2 - Missile.HEIGHT / 2;
         Missile m = new Missile(x, y, enemy, dir);
         TankWar.getInstance().addMissile(m);
     }
 
     private void determineDirection() {
-        if (bL && !bU && !bR && !bD) direction = Direction.Left;
-        else if (bL && bU && !bR && !bD) direction = Direction.LeftUp;
-        else if (!bL && bU && !bR && !bD) direction = Direction.Up;
-        else if (!bL && bU && bR && !bD) direction = Direction.RightUp;
-        else if (!bL && !bU && bR && !bD) direction = Direction.Right;
-        else if (!bL && !bU && bR) direction = Direction.RightDown;
-        else if (!bL && !bU && bD) direction = Direction.Down;
-        else if (bL && !bU && !bR) direction = Direction.LeftDown;
-        else if (!bL && !bU) direction = null;
+        this.direction = Direction.get(this.dirCode);
     }
 
     @Override
     Rectangle getRectangle() {
-        return new Rectangle(x, y, width, height);
-    }
-
-    void collidesWithBlood(Blood blood) {
-        if (!this.enemy && this.isLive() && blood.isLive() && this.getRectangle().intersects(blood.getRectangle())) {
-            this.hp = MAX_HP;
-            Tools.playAudio("revive.wav");
-            blood.setLive(false);
-        }
-    }
-
-    void collidesWithWalls(List<Wall> walls) {
-        if (this.collidedWithWalls(walls))
-            this.direction = null;
-    }
-
-    private boolean collidedWithWalls(List<Wall> walls) {
-        for (Wall wall : walls)
-            if (this.isLive() && this.getRectangle().intersects(wall.getRectangle()))
-                return true;
-        return false;
-    }
-
-    void collidesWithTanks(List<Tank> tanks) {
-        if (this.collidedWithTanks(tanks))
-            this.direction = null;
-    }
-
-    private boolean collidedWithTanks(List<Tank> tanks) {
-        for (int i = 0; i < tanks.size(); i++)
-            if (this.collidedWithTank(tanks.get(i)))
-                return true;
-        return false;
-    }
-
-    private boolean collidedWithTank(Tank t) {
-        return this != t && this.isLive() && t.isLive() && this.getRectangle().intersects(t.getRectangle());
-    }
-
-    void collidesWithTank(Tank t) {
-        if (this.collidedWithTank(t))
-            this.direction = null;
+        int delta = this.enemy ? 0 : 40;
+        return new Rectangle(x - delta, y, WIDTH + delta, HEIGHT);
     }
 }

@@ -1,7 +1,3 @@
-/*
-* This is a personal academic project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 import javax.swing.*;
 import java.awt.*;
 
@@ -23,9 +19,10 @@ class Explode extends GameObject {
 
     @Override
     void draw(Graphics g) {
-        // display 10 images continuously to simulate animation effect, thus will end after last frame
+        // display 10 images continuously to simulate animation effect and end after last frame
         boolean live = step < IMAGES.length;
         if (!live) {
+            this.setLive(false);
             return;
         }
 

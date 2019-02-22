@@ -1,7 +1,3 @@
-/*
-* This is a personal academic project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 import java.awt.*;
 
 /**
@@ -32,5 +28,10 @@ abstract class GameObject {
     abstract void draw(Graphics g);
 
     abstract Rectangle getRectangle();
+
+    boolean isCollidedWith(GameObject object) {
+        return this != object && this.isLive() && object.isLive() &&
+            this.getRectangle().intersects(object.getRectangle());
+    }
 
 }
