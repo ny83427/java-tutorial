@@ -79,6 +79,10 @@ class TankWar extends JComponent {
                 int x = 100 + 110 * (j + 1);
                 int y = 300 + i * 50;
                 Tank tank = new Tank(x, y, true);
+                // Game might be restarted many times and regenerated enemy tank might collide with player tank
+                if (tank.isCollidedWith(this.tank)) {
+                    continue;
+                }
                 tank.initDirection(Direction.Up);
                 this.enemyTanks.add(tank);
             }
