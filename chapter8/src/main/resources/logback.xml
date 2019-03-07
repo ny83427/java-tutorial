@@ -1,0 +1,30 @@
+<configuration scan="true">
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+    <property name="LOG_ROOT" value="logs"/>
+    <consolePlugin/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="demo" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ROOT}/demo.%d{yyyy-M-d}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="console" additivity="false" level="info">
+        <appender-ref ref="console"/>
+    </logger>
+    <root level="info">
+        <appender-ref ref="demo"/>
+        <appender-ref ref="console"/>
+    </root>
+</configuration>
