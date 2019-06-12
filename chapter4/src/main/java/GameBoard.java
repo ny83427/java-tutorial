@@ -97,8 +97,8 @@ class GameBoard extends JPanel {
         if (status == null || status == Status.INIT) {
             g2d.setFont(new Font(g2d.getFont().getName(), Font.BOLD, 48));
             g2d.setColor(new Color(63, 122, 77));
-            g2d.drawString("Welcome to the Most Boring Soccer Game!", 35, 90);
-            g2d.drawImage(new ImageIcon("images/champions.jpg").getImage(), 13, 144, null);
+            g2d.drawString("The Most Boring Soccer Game!", 35, 60);
+            g2d.drawImage(new ImageIcon("images/champions.jpg").getImage(), 13, 90, null);
         } else {
             this.field.draw(g2d);
             this.homeTeam.draw(g2d);

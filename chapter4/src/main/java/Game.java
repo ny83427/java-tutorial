@@ -31,13 +31,6 @@ public class Game extends JFrame {
         this.scoreLabel.setFont(font);
 
         this.initComponents();
-
-        int maxHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-        int locationY = (maxHeight - this.getHeight()) / 2;
-        if (locationY < 0) {
-            locationY = 0;
-        }
-        this.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - this.getWidth()) / 2, locationY);
     }
 
     private void setExtraAttributesForButtons(JButton... buttons) {
@@ -102,7 +95,6 @@ public class Game extends JFrame {
                         .addComponent(resetBtn, btnH, btnH, btnH)
                         .addComponent(exitBtn, btnH, btnH, btnH)))
         );
-        pack();
     }
 
     private void resetGame() {
@@ -263,6 +255,8 @@ public class Game extends JFrame {
 
         Tools.setTheme();
         Game game = new Game(board);
+        game.pack();
+        game.setLocationRelativeTo(null);
         game.setVisible(true);
 
         while (!board.isRunning()) {
